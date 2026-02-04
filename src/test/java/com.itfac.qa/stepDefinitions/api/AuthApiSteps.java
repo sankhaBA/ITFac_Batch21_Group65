@@ -12,6 +12,12 @@ public class AuthApiSteps {
 
     private Response response;
 
+    public static void setSharedResponse(Response resp) {
+        sharedResponse = resp;
+    }
+
+    private static Response sharedResponse;
+
     @Given("the backend API is running at {string}")
     public void setBaseUrl(String url) {
         RestAssured.baseURI = url;
@@ -32,7 +38,9 @@ public class AuthApiSteps {
 
     @Then("the response status code should be {int}")
     public void verifyStatusCode(int expectedCode) {
-        Assert.assertEquals("Status code mismatch!", expectedCode, response.getStatusCode());
+        Response responseToCheck = (response != null) ? response : sharedResponse;
+        Assert.assertNotNull("No response available to verify!", responseToCheck);
+        Assert.assertEquals("Status code mismatch!", expectedCode, responseToCheck.getStatusCode());
     }
 
     @Then("the response should contain a valid {string}")
