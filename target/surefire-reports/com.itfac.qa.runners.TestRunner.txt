@@ -1,0 +1,67 @@
+-------------------------------------------------------------------------------
+Test set: com.itfac.qa.runners.TestRunner
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 5, Errors: 3, Skipped: 0, Time elapsed: 9.066 s <<< FAILURE! -- in com.itfac.qa.runners.TestRunner
+Category Management API.Verify GET all categories returns 200 OK -- Time elapsed: 6.829 s <<< FAILURE!
+java.lang.AssertionError: expected:<200> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 200(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:11)
+
+Category Management API.Verify POST create category success -- Time elapsed: 0.091 s <<< FAILURE!
+java.lang.AssertionError: expected:<201> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 201(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:18)
+
+Category Management API.Verify POST create category validations (Negative) #1 -- Time elapsed: 0.079 s <<< FAILURE!
+java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+
+Category Management API.Verify POST create category validations (Negative) #2 -- Time elapsed: 0.107 s <<< FAILURE!
+java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+
+Category Management API.Verify POST create category validations (Negative) #3 -- Time elapsed: 0.131 s <<< FAILURE!
+java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+
+Category Management API.Verify PUT update category success -- Time elapsed: 0.133 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(CategoryApiSteps.java:96)
+	at ✽.a category exists with name "ToUpdate"(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:33)
+
+Category Management API.Verify DELETE category success -- Time elapsed: 0.136 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(CategoryApiSteps.java:96)
+	at ✽.a category exists with name "ToDelete"(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:39)
+
+Category Management API.Verify RBAC - User cannot Delete Category -- Time elapsed: 0.240 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists_admin_context(CategoryApiSteps.java:115)
+	at ✽.a category exists with name "UserTryDelete" (created by admin)(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:45)
+

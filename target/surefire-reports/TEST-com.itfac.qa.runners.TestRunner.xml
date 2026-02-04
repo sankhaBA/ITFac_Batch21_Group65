@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.itfac.qa.runners.TestRunner" time="9.066" tests="8" errors="3" skipped="0" failures="5">
+  <properties>
+    <property name="java.specification.version" value="23"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="D:\Aca\L4S1\QA\Assessment\ITFac_Batch21_Group65\target\test-classes;D:\Aca\L4S1\QA\Assessment\ITFac_Batch21_Group65\target\classes;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-java\7.14.0\cucumber-java-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-core\7.14.0\cucumber-core-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-gherkin\7.14.0\cucumber-gherkin-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-gherkin-messages\7.14.0\cucumber-gherkin-messages-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\gherkin\26.2.0\gherkin-26.2.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\messages\22.0.0\messages-22.0.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\tag-expressions\5.0.6\tag-expressions-5.0.6.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-expressions\16.1.2\cucumber-expressions-16.1.2.jar;C:\Users\Dell\.m2\repository\io\cucumber\datatable\7.14.0\datatable-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-plugin\7.14.0\cucumber-plugin-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\docstring\7.14.0\docstring-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\html-formatter\20.4.0\html-formatter-20.4.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\junit-xml-formatter\0.2.0\junit-xml-formatter-0.2.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\ci-environment\9.2.0\ci-environment-9.2.0.jar;C:\Users\Dell\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-junit\7.14.0\cucumber-junit-7.14.0.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-java\4.16.1\selenium-java-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-api\4.16.1\selenium-api-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-chrome-driver\4.16.1\selenium-chrome-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\com\google\auto\service\auto-service-annotations\1.1.1\auto-service-annotations-1.1.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-chromium-driver\4.16.1\selenium-chromium-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-json\4.16.1\selenium-json-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-manager\4.16.1\selenium-manager-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v118\4.16.1\selenium-devtools-v118-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v119\4.16.1\selenium-devtools-v119-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v120\4.16.1\selenium-devtools-v120-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v85\4.16.1\selenium-devtools-v85-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-edge-driver\4.16.1\selenium-edge-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-firefox-driver\4.16.1\selenium-firefox-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-http\4.16.1\selenium-http-4.16.1.jar;C:\Users\Dell\.m2\repository\dev\failsafe\failsafe\3.3.2\failsafe-3.3.2.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-ie-driver\4.16.1\selenium-ie-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-remote-driver\4.16.1\selenium-remote-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\com\google\guava\guava\32.1.2-jre\guava-32.1.2-jre.jar;C:\Users\Dell\.m2\repository\com\google\guava\failureaccess\1.0.1\failureaccess-1.0.1.jar;C:\Users\Dell\.m2\repository\com\google\guava\listenablefuture\9999.0-empty-to-avoid-conflict-with-guava\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:\Users\Dell\.m2\repository\com\google\code\findbugs\jsr305\3.0.2\jsr305-3.0.2.jar;C:\Users\Dell\.m2\repository\org\checkerframework\checker-qual\3.33.0\checker-qual-3.33.0.jar;C:\Users\Dell\.m2\repository\com\google\errorprone\error_prone_annotations\2.18.0\error_prone_annotations-2.18.0.jar;C:\Users\Dell\.m2\repository\com\google\j2objc\j2objc-annotations\2.8\j2objc-annotations-2.8.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-api\1.28.0\opentelemetry-api-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-context\1.28.0\opentelemetry-context-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-exporter-logging\1.28.0\opentelemetry-exporter-logging-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-metrics\1.28.0\opentelemetry-sdk-metrics-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-extension-incubator\1.28.0-alpha\opentelemetry-extension-incubator-1.28.0-alpha.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-logs\1.28.0\opentelemetry-sdk-logs-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-common\1.28.0\opentelemetry-sdk-common-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-extension-autoconfigure-spi\1.28.0\opentelemetry-sdk-extension-autoconfigure-spi-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-extension-autoconfigure\1.28.0\opentelemetry-sdk-extension-autoconfigure-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-api-events\1.28.0-alpha\opentelemetry-api-events-1.28.0-alpha.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-trace\1.28.0\opentelemetry-sdk-trace-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk\1.28.0\opentelemetry-sdk-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-semconv\1.28.0-alpha\opentelemetry-semconv-1.28.0-alpha.jar;C:\Users\Dell\.m2\repository\net\bytebuddy\byte-buddy\1.14.5\byte-buddy-1.14.5.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-os\4.16.1\selenium-os-4.16.1.jar;C:\Users\Dell\.m2\repository\org\apache\commons\commons-exec\1.3\commons-exec-1.3.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-safari-driver\4.16.1\selenium-safari-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-support\4.16.1\selenium-support-4.16.1.jar;C:\Users\Dell\.m2\repository\io\rest-assured\rest-assured\5.3.2\rest-assured-5.3.2.jar;C:\Users\Dell\.m2\repository\org\apache\groovy\groovy\4.0.11\groovy-4.0.11.jar;C:\Users\Dell\.m2\repository\org\apache\groovy\groovy-xml\4.0.11\groovy-xml-4.0.11.jar;C:\Users\Dell\.m2\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;C:\Users\Dell\.m2\repository\org\apache\httpcomponents\httpcore\4.4.13\httpcore-4.4.13.jar;C:\Users\Dell\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;C:\Users\Dell\.m2\repository\commons-codec\commons-codec\1.11\commons-codec-1.11.jar;C:\Users\Dell\.m2\repository\org\apache\httpcomponents\httpmime\4.5.13\httpmime-4.5.13.jar;C:\Users\Dell\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\Dell\.m2\repository\org\ccil\cowan\tagsoup\tagsoup\1.2.1\tagsoup-1.2.1.jar;C:\Users\Dell\.m2\repository\io\rest-assured\json-path\5.3.2\json-path-5.3.2.jar;C:\Users\Dell\.m2\repository\org\apache\groovy\groovy-json\4.0.11\groovy-json-4.0.11.jar;C:\Users\Dell\.m2\repository\io\rest-assured\rest-assured-common\5.3.2\rest-assured-common-5.3.2.jar;C:\Users\Dell\.m2\repository\io\rest-assured\xml-path\5.3.2\xml-path-5.3.2.jar;C:\Users\Dell\.m2\repository\org\apache\commons\commons-lang3\3.11\commons-lang3-3.11.jar;C:\Users\Dell\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.15.2\jackson-databind-2.15.2.jar;C:\Users\Dell\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.15.2\jackson-annotations-2.15.2.jar;C:\Users\Dell\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.15.2\jackson-core-2.15.2.jar;C:\Users\Dell\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\Dell\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="Asia/Colombo"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="23"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-23\bin"/>
+    <property name="sun.java.command" value="C:\Users\Dell\AppData\Local\Temp\surefire9062239257517581762\surefirebooter-20260204221856788_3.jar C:\Users\Dell\AppData\Local\Temp\surefire9062239257517581762 2026-02-04T22-18-56_598-jvmRun1 surefire-20260204221856788_1tmp surefire_0-20260204221856788_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="D:\Aca\L4S1\QA\Assessment\ITFac_Batch21_Group65\target\test-classes;D:\Aca\L4S1\QA\Assessment\ITFac_Batch21_Group65\target\classes;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-java\7.14.0\cucumber-java-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-core\7.14.0\cucumber-core-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-gherkin\7.14.0\cucumber-gherkin-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-gherkin-messages\7.14.0\cucumber-gherkin-messages-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\gherkin\26.2.0\gherkin-26.2.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\messages\22.0.0\messages-22.0.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\tag-expressions\5.0.6\tag-expressions-5.0.6.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-expressions\16.1.2\cucumber-expressions-16.1.2.jar;C:\Users\Dell\.m2\repository\io\cucumber\datatable\7.14.0\datatable-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-plugin\7.14.0\cucumber-plugin-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\docstring\7.14.0\docstring-7.14.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\html-formatter\20.4.0\html-formatter-20.4.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\junit-xml-formatter\0.2.0\junit-xml-formatter-0.2.0.jar;C:\Users\Dell\.m2\repository\io\cucumber\ci-environment\9.2.0\ci-environment-9.2.0.jar;C:\Users\Dell\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Dell\.m2\repository\io\cucumber\cucumber-junit\7.14.0\cucumber-junit-7.14.0.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-java\4.16.1\selenium-java-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-api\4.16.1\selenium-api-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-chrome-driver\4.16.1\selenium-chrome-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\com\google\auto\service\auto-service-annotations\1.1.1\auto-service-annotations-1.1.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-chromium-driver\4.16.1\selenium-chromium-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-json\4.16.1\selenium-json-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-manager\4.16.1\selenium-manager-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v118\4.16.1\selenium-devtools-v118-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v119\4.16.1\selenium-devtools-v119-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v120\4.16.1\selenium-devtools-v120-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v85\4.16.1\selenium-devtools-v85-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-edge-driver\4.16.1\selenium-edge-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-firefox-driver\4.16.1\selenium-firefox-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-http\4.16.1\selenium-http-4.16.1.jar;C:\Users\Dell\.m2\repository\dev\failsafe\failsafe\3.3.2\failsafe-3.3.2.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-ie-driver\4.16.1\selenium-ie-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-remote-driver\4.16.1\selenium-remote-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\com\google\guava\guava\32.1.2-jre\guava-32.1.2-jre.jar;C:\Users\Dell\.m2\repository\com\google\guava\failureaccess\1.0.1\failureaccess-1.0.1.jar;C:\Users\Dell\.m2\repository\com\google\guava\listenablefuture\9999.0-empty-to-avoid-conflict-with-guava\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:\Users\Dell\.m2\repository\com\google\code\findbugs\jsr305\3.0.2\jsr305-3.0.2.jar;C:\Users\Dell\.m2\repository\org\checkerframework\checker-qual\3.33.0\checker-qual-3.33.0.jar;C:\Users\Dell\.m2\repository\com\google\errorprone\error_prone_annotations\2.18.0\error_prone_annotations-2.18.0.jar;C:\Users\Dell\.m2\repository\com\google\j2objc\j2objc-annotations\2.8\j2objc-annotations-2.8.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-api\1.28.0\opentelemetry-api-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-context\1.28.0\opentelemetry-context-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-exporter-logging\1.28.0\opentelemetry-exporter-logging-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-metrics\1.28.0\opentelemetry-sdk-metrics-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-extension-incubator\1.28.0-alpha\opentelemetry-extension-incubator-1.28.0-alpha.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-logs\1.28.0\opentelemetry-sdk-logs-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-common\1.28.0\opentelemetry-sdk-common-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-extension-autoconfigure-spi\1.28.0\opentelemetry-sdk-extension-autoconfigure-spi-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-extension-autoconfigure\1.28.0\opentelemetry-sdk-extension-autoconfigure-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-api-events\1.28.0-alpha\opentelemetry-api-events-1.28.0-alpha.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk-trace\1.28.0\opentelemetry-sdk-trace-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-sdk\1.28.0\opentelemetry-sdk-1.28.0.jar;C:\Users\Dell\.m2\repository\io\opentelemetry\opentelemetry-semconv\1.28.0-alpha\opentelemetry-semconv-1.28.0-alpha.jar;C:\Users\Dell\.m2\repository\net\bytebuddy\byte-buddy\1.14.5\byte-buddy-1.14.5.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-os\4.16.1\selenium-os-4.16.1.jar;C:\Users\Dell\.m2\repository\org\apache\commons\commons-exec\1.3\commons-exec-1.3.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-safari-driver\4.16.1\selenium-safari-driver-4.16.1.jar;C:\Users\Dell\.m2\repository\org\seleniumhq\selenium\selenium-support\4.16.1\selenium-support-4.16.1.jar;C:\Users\Dell\.m2\repository\io\rest-assured\rest-assured\5.3.2\rest-assured-5.3.2.jar;C:\Users\Dell\.m2\repository\org\apache\groovy\groovy\4.0.11\groovy-4.0.11.jar;C:\Users\Dell\.m2\repository\org\apache\groovy\groovy-xml\4.0.11\groovy-xml-4.0.11.jar;C:\Users\Dell\.m2\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;C:\Users\Dell\.m2\repository\org\apache\httpcomponents\httpcore\4.4.13\httpcore-4.4.13.jar;C:\Users\Dell\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;C:\Users\Dell\.m2\repository\commons-codec\commons-codec\1.11\commons-codec-1.11.jar;C:\Users\Dell\.m2\repository\org\apache\httpcomponents\httpmime\4.5.13\httpmime-4.5.13.jar;C:\Users\Dell\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\Dell\.m2\repository\org\ccil\cowan\tagsoup\tagsoup\1.2.1\tagsoup-1.2.1.jar;C:\Users\Dell\.m2\repository\io\rest-assured\json-path\5.3.2\json-path-5.3.2.jar;C:\Users\Dell\.m2\repository\org\apache\groovy\groovy-json\4.0.11\groovy-json-4.0.11.jar;C:\Users\Dell\.m2\repository\io\rest-assured\rest-assured-common\5.3.2\rest-assured-common-5.3.2.jar;C:\Users\Dell\.m2\repository\io\rest-assured\xml-path\5.3.2\xml-path-5.3.2.jar;C:\Users\Dell\.m2\repository\org\apache\commons\commons-lang3\3.11\commons-lang3-3.11.jar;C:\Users\Dell\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.15.2\jackson-databind-2.15.2.jar;C:\Users\Dell\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.15.2\jackson-annotations-2.15.2.jar;C:\Users\Dell\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.15.2\jackson-core-2.15.2.jar;C:\Users\Dell\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\Dell\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Dell"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2024-10-15"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-23"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="D:\Aca\L4S1\QA\Assessment\ITFac_Batch21_Group65"/>
+    <property name="java.vm.compressedOopsMode" value="32-bit"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\Dell\AppData\Local\Temp\surefire9062239257517581762\surefirebooter-20260204221856788_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="23.0.1+11-39"/>
+    <property name="user.name" value="Dell"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="C:\Users\Dell\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\Dell\AppData\Local\Temp\"/>
+    <property name="java.version" value="23.0.1"/>
+    <property name="user.dir" value="D:\Aca\L4S1\QA\Assessment\ITFac_Batch21_Group65"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-23\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;c:\Users\Dell\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\Dell\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;C:\Program Files\Prophesee\bin;C:\Program Files\Prophesee\third_party\bin;C:\Program Files\Prophesee\third_party\debug\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Python312\Scripts\;C:\Python312\;C:\Python310\Scripts\;C:\Python310\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\JetBrains\CLion 2022.1.3\bin\mingw\bin;C:\Users\Dell\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\WINDOWS\system32\config\systemprofile\AppData\Roaming\npm;C:\Program Files\apache-maven-3.9.4\bin;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\160\DTS\Binn\;C:\php;C:\Program Files\CMake\bin;D:\Git\cmd;C:\Program Files\Prophesee\bin;C:\Program Files\Prophesee\third_party\bin;C:\Program Files\Prophesee\third_party\debug\bin;C:\Program Files\ffmpeg-8.0-full_build\bin;D:\Aca\L4S1\ASE\Lab\sonar-scanner-8.0.1.6346-windows-x64\bin;C:\Program Files\Apache\maven\maven-mvnd-1.0.3-windows-amd64\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\Dell\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\Dell\AppData\Local\Programs\Python\Python37\;C:\Users\Dell\anaconda3;C:\Users\Dell\anaconda3\Library\mingw-w64\bin;C:\Users\Dell\anaconda3\Library\usr\bin;C:\Users\Dell\anaconda3\Library\bin;C:\Users\Dell\anaconda3\Scripts;C:\Users\Dell\AppData\Local\Microsoft\WindowsApps;D:\Aplication Softwares\Microsoft VS Code\bin;C:\Users\Dell\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\JetBrains\IntelliJ IDEA 2023.2\bin;;C:\Users\Dell\.dotnet\tools;C:\Users\Dell\AppData\Roaming\npm;C:\Program Files\Azure Data Studio\bin;C:\Users\Dell\AppData\Local\GitHubDesktop\bin;C:\Program Files\Java\jdk-21\bin;C:\Users\Dell\.dotnet\tools\;c:\Users\Dell\.vscode\extensions\vscjava.vscode-java-debug-0.58.5\bundled\scripts\noConfigScripts;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="23.0.1+11-39"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="67.0"/>
+  </properties>
+  <testcase name="Verify GET all categories returns 200 OK" classname="Category Management API" time="6.829">
+    <failure message="expected:&lt;200&gt; but was:&lt;401&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: expected:<200> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 200(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:11)
+]]></failure>
+    <system-out><![CDATA[
+@API
+Scenario: Verify GET all categories returns 200 OK      # src/test/resources/features/api/Category_API.feature:9
+  Given I have a valid authentication token for "admin" # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  When I send a GET request to "/api/categories"        # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_get(java.lang.String)
+  Then the response status code should be 200           # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+      java.lang.AssertionError: expected:<200> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 200(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:11)
+
+  And the response should contain a list of categories  # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.response_contains_list()
+]]></system-out>
+  </testcase>
+  <testcase name="Verify POST create category success" classname="Category Management API" time="0.091">
+    <failure message="expected:&lt;201&gt; but was:&lt;401&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: expected:<201> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 201(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:18)
+]]></failure>
+    <system-out><![CDATA[
+@API
+Scenario: Verify POST create category success                              # src/test/resources/features/api/Category_API.feature:14
+  Given I have a valid authentication token for "admin"                    # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  When I send a POST request to "/api/categories" with the following body: # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_post(java.lang.String,io.cucumber.datatable.DataTable)
+    | name   | validCat |
+    | parent | [empty]  |
+  Then the response status code should be 201                              # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+      java.lang.AssertionError: expected:<201> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 201(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:18)
+
+  And the response body should contain "name" with value "validCat"        # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.body_contains(java.lang.String,java.lang.String)
+]]></system-out>
+  </testcase>
+  <testcase name="Verify POST create category validations (Negative) #1" classname="Category Management API" time="0.079">
+    <failure message="expected:&lt;400&gt; but was:&lt;401&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+]]></failure>
+    <system-out><![CDATA[
+@API
+Scenario Outline: Verify POST create category validations (Negative)       # src/test/resources/features/api/Category_API.feature:28
+  Given I have a valid authentication token for "admin"                    # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  When I send a POST request to "/api/categories" with the following body: # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_post(java.lang.String,io.cucumber.datatable.DataTable)
+    | name | AB |
+  Then the response status code should be 400                              # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+      java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+
+]]></system-out>
+  </testcase>
+  <testcase name="Verify POST create category validations (Negative) #2" classname="Category Management API" time="0.107">
+    <failure message="expected:&lt;400&gt; but was:&lt;401&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+]]></failure>
+    <system-out><![CDATA[
+@API
+Scenario Outline: Verify POST create category validations (Negative)       # src/test/resources/features/api/Category_API.feature:29
+  Given I have a valid authentication token for "admin"                    # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  When I send a POST request to "/api/categories" with the following body: # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_post(java.lang.String,io.cucumber.datatable.DataTable)
+    | name | VeryLongName1 |
+  Then the response status code should be 400                              # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+      java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+
+]]></system-out>
+  </testcase>
+  <testcase name="Verify POST create category validations (Negative) #3" classname="Category Management API" time="0.131">
+    <failure message="expected:&lt;400&gt; but was:&lt;401&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+]]></failure>
+    <system-out><![CDATA[
+@API
+Scenario Outline: Verify POST create category validations (Negative)       # src/test/resources/features/api/Category_API.feature:30
+  Given I have a valid authentication token for "admin"                    # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  When I send a POST request to "/api/categories" with the following body: # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_post(java.lang.String,io.cucumber.datatable.DataTable)
+    | name | [empty] |
+  Then the response status code should be 400                              # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+      java.lang.AssertionError: expected:<400> but was:<401>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(CategoryApiSteps.java:56)
+	at ✽.the response status code should be 400(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:24)
+
+]]></system-out>
+  </testcase>
+  <testcase name="Verify PUT update category success" classname="Category Management API" time="0.133">
+    <error message="Cannot invoke &quot;java.lang.Integer.intValue()&quot; because the return value of &quot;io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)&quot; is null" type="java.lang.NullPointerException"><![CDATA[java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(CategoryApiSteps.java:96)
+	at ✽.a category exists with name "ToUpdate"(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:33)
+]]></error>
+    <system-out><![CDATA[
+@API
+Scenario: Verify PUT update category success                                 # src/test/resources/features/api/Category_API.feature:32
+  Given I have a valid authentication token for "admin"                      # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  Given a category exists with name "ToUpdate"                               # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(java.lang.String)
+      java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(CategoryApiSteps.java:96)
+	at ✽.a category exists with name "ToUpdate"(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:33)
+
+  When I send a PUT request to update the category with name "UpdatedViaAPI" # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_put(java.lang.String)
+  Then the response status code should be 200                                # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+  And the response body should contain "name" with value "UpdatedViaAPI"     # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.body_contains(java.lang.String,java.lang.String)
+]]></system-out>
+  </testcase>
+  <testcase name="Verify DELETE category success" classname="Category Management API" time="0.136">
+    <error message="Cannot invoke &quot;java.lang.Integer.intValue()&quot; because the return value of &quot;io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)&quot; is null" type="java.lang.NullPointerException"><![CDATA[java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(CategoryApiSteps.java:96)
+	at ✽.a category exists with name "ToDelete"(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:39)
+]]></error>
+    <system-out><![CDATA[
+@API
+Scenario: Verify DELETE category success                # src/test/resources/features/api/Category_API.feature:38
+  Given I have a valid authentication token for "admin" # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  Given a category exists with name "ToDelete"          # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(java.lang.String)
+      java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists(CategoryApiSteps.java:96)
+	at ✽.a category exists with name "ToDelete"(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:39)
+
+  When I send a DELETE request for that category        # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_delete()
+  Then the response status code should be 204           # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+]]></system-out>
+  </testcase>
+  <testcase name="Verify RBAC - User cannot Delete Category" classname="Category Management API" time="0.24">
+    <error message="Cannot invoke &quot;java.lang.Integer.intValue()&quot; because the return value of &quot;io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)&quot; is null" type="java.lang.NullPointerException"><![CDATA[java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists_admin_context(CategoryApiSteps.java:115)
+	at ✽.a category exists with name "UserTryDelete" (created by admin)(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:45)
+]]></error>
+    <system-out><![CDATA[
+@API
+Scenario: Verify RBAC - User cannot Delete Category                  # src/test/resources/features/api/Category_API.feature:43
+  Given I have a valid authentication token for "admin"              # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  Given I have a valid authentication token for "user"               # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_have_token(java.lang.String)
+  And a category exists with name "UserTryDelete" (created by admin) # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists_admin_context(java.lang.String)
+      java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "io.restassured.internal.common.path.ObjectConverter.convertObjectTo(Object, java.lang.Class)" is null
+	at io.restassured.path.json.JsonPath.getInt(JsonPath.java:245)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.category_exists_admin_context(CategoryApiSteps.java:115)
+	at ✽.a category exists with name "UserTryDelete" (created by admin)(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:45)
+
+  When I send a DELETE request for that category                     # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.i_send_delete()
+  Then the response status code should be 403                        # com.itfac.qa.stepDefinitions.api.CategoryApiSteps.status_code_should_be(int)
+]]></system-out>
+  </testcase>
+</testsuite>

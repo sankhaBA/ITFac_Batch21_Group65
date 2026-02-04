@@ -1,4 +1,4 @@
-package test.java.com.itfac.qa.hooks;
+package com.itfac.qa.hooks;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -19,6 +19,7 @@ public class Hooks {
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+
     }
 
     @After("@UI")
