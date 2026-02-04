@@ -1,4 +1,4 @@
 com\itfac\qa\runners\TestRunner.class
-com\itfac\qa\stepDefinitions\api\CategoryApiSteps.class
 com\itfac\qa\hooks\Hooks.class
 com\itfac\qa\stepDefinitions\ui\CategoryUiSteps.class
+com\itfac\qa\stepDefinitions\api\CategoryApiSteps.class

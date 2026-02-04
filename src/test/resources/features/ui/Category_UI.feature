@@ -5,7 +5,8 @@ Feature: Category Management UI
 
   Background:
     Given I open the application
-    And I am logged in as "admin" with password "admin123"
+    # This automatically uses the 'admin' credentials defined in Java
+    And I am logged in as "Admin" 
     And I navigate to the "Categories" page
 
   Scenario: Verify Admin can create a new category successfully
@@ -46,13 +47,15 @@ Feature: Category Management UI
     Then I should see "<ExpectedResult>" in the category list
 
     Examples:
-      | SearchTerm | ExpectedResult |
-      | Anthurium  | Anthurium      |
+      | SearchTerm | ExpectedResult    |
+      | Anthurium  | Anthurium         |
       | InvalidCat | No category found |
 
   Scenario: Verify User (Non-Admin) cannot see management buttons
+    # Since Background logs in as Admin, we must logout first
     Given I click the "Logout" button
-    And I am logged in as "user" with password "user123"
+    # This automatically uses the 'testuser' credentials defined in Java
+    And I am logged in as "User"
     When I navigate to the "Categories" page
     Then I should not see the "Add Category" button
     And I should not see the "Delete" buttons

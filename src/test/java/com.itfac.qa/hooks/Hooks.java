@@ -19,7 +19,6 @@ public class Hooks {
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
-
     }
 
     @After("@UI")

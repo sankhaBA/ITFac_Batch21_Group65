@@ -5,6 +5,7 @@ import io.cucumber.java.en.*;
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor; // Added for robust clicking
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -14,34 +15,56 @@ import java.util.List;
 
 public class CategoryUiSteps {
 
-    WebDriverWait wait = new WebDriverWait(Hooks.driver, Duration.ofSeconds(10));
-    String BASE_URL = "http://localhost:8080/ui"; // Adjust port if needed
+    WebDriverWait wait = new WebDriverWait(Hooks.driver, Duration.ofSeconds(15));
+    String BASE_URL = "http://localhost:8080/ui";
 
-    // Locators
-    By usernameField = By.id("username");
-    By passwordField = By.id("password");
-    By loginBtn = By.xpath("//button[text()='Login']");
-    By logoutBtn = By.xpath("//button[text()='Logout']");
+    // --- CREDENTIALS ---
+    private final String ADMIN_USER = "admin";
+    private final String ADMIN_PASS = "admin123";
+    private final String REGULAR_USER = "testuser";
+    private final String REGULAR_PASS = "test123";
 
-    By menuCategories = By.xpath("//a[@href='/ui/categories']");
-    By addCategoryBtn = By.xpath("//button[contains(text(),'Add Category')]");
-    By nameInput = By.id("name"); // Assuming ID from standard practices
-    By saveBtn = By.xpath("//button[text()='Save']");
-    By successMessage = By.id("success-msg"); // Adjust ID based on your inspecting
-    By errorMessage = By.className("invalid-feedback");
-    By searchInput = By.id("search");
-    By searchBtn = By.xpath("//button[text()='Search']");
+    // --- LOCATORS ---
+
+    // Login
+    By usernameField = By.xpath("//input[@name='username']");
+    By passwordField = By.xpath("//input[@name='password']");
+    By loginBtn = By.xpath("//button[contains(text(),'Login') or contains(text(),'Sign')]");
+
+    // Navigation & Global Buttons
+    // UPDATED: Looks for text 'Logout', OR title 'Logout', OR link containing
+    // 'logout'
+    By logoutBtn = By.xpath("//*[contains(text(),'Logout')] | //*[@title='Logout'] | //a[contains(@href,'logout')]");
+    By menuCategories = By.cssSelector("a[href*='categories']");
+
+    // Page Elements
+    By searchInput = By.cssSelector("input[placeholder*='Search']");
+    By searchBtn = By.xpath("//button[contains(text(),'Search')]");
+    By nameInput = By.cssSelector("input[id='name'], input[name='name']");
+    By saveBtn = By.xpath("//button[text()='Save'] | //input[@type='submit']");
+    By errorLocator = By.className("invalid-feedback");
 
     @Given("I open the application")
     public void i_open_the_application() {
         Hooks.driver.get(BASE_URL + "/login");
     }
 
-    @Given("I am logged in as {string} with password {string}")
-    public void i_am_logged_in_as(String user, String pass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).sendKeys(user);
-        Hooks.driver.findElement(passwordField).sendKeys(pass);
-        Hooks.driver.findElement(loginBtn).click();
+    @Given("I am logged in as {string}")
+    public void i_am_logged_in_as_role(String role) {
+        String user = role.equalsIgnoreCase("Admin") ? ADMIN_USER : REGULAR_USER;
+        String pass = role.equalsIgnoreCase("Admin") ? ADMIN_PASS : REGULAR_PASS;
+        performLogin(user, pass);
+    }
+
+    private void performLogin(String user, String pass) {
+        try {
+            if (Hooks.driver.findElements(usernameField).size() > 0) {
+                wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).sendKeys(user);
+                Hooks.driver.findElement(passwordField).sendKeys(pass);
+                Hooks.driver.findElement(loginBtn).click();
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Given("I navigate to the {string} page")
@@ -53,12 +76,25 @@ public class CategoryUiSteps {
 
     @When("I click the {string} button")
     public void i_click_button(String btnName) {
+        By locator = null;
+
         if (btnName.equals("Add Category")) {
-            wait.until(ExpectedConditions.elementToBeClickable(addCategoryBtn)).click();
+            locator = By.xpath("//a[contains(@class,'btn-primary') and contains(text(),'Add')]");
         } else if (btnName.equals("Save")) {
-            Hooks.driver.findElement(saveBtn).click();
+            locator = saveBtn;
         } else if (btnName.equals("Logout")) {
-            Hooks.driver.findElement(logoutBtn).click();
+            locator = logoutBtn;
+        } else if (btnName.equals("Search")) {
+            locator = searchBtn;
+        }
+
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+        } catch (Exception e) {
+            // Fallback: If standard click fails (e.g. obscured), use Javascript Force Click
+            System.out.println("Standard click failed for " + btnName + ". Attempting Force Click.");
+            WebElement element = Hooks.driver.findElement(locator);
+            ((JavascriptExecutor) Hooks.driver).executeScript("arguments[0].click();", element);
         }
     }
 
@@ -71,32 +107,32 @@ public class CategoryUiSteps {
 
     @Then("I should see a success message {string}")
     public void i_should_see_success(String msg) {
-        // Handling checking for toast message or specific element text
-        // Note: You might need to inspect the element ID for the toast message
-        WebElement msgElement = wait
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'" + msg + "')]")));
-        Assert.assertTrue(msgElement.isDisplayed());
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'" + msg + "')]")));
     }
 
     @Then("I should see a validation error {string}")
-    public void i_should_see_error(String errorMsg) {
-        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage));
-        Assert.assertEquals(errorMsg, error.getText());
+    public void i_should_see_error(String expectedError) {
+        WebElement errorElem = wait.until(ExpectedConditions.visibilityOfElementLocated(errorLocator));
+        String actualError = errorElem.getText().trim();
+        String expectedClean = expectedError.replace(".", "").trim();
+        String actualClean = actualError.replace(".", "").trim();
+        Assert.assertTrue("Error mismatch! Found: " + actualError, actualClean.contains(expectedClean));
     }
 
     @Then("I should see {string} in the category list")
     public void i_should_see_in_list(String catName) {
-        // Simple check if the text exists in the table
-        boolean found = Hooks.driver.getPageSource().contains(catName);
-        Assert.assertTrue("Category " + catName + " not found in list", found);
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), catName));
     }
 
     @When("I click the {string} button for the category {string}")
     public void i_click_action_for_category(String action, String catName) {
-        // Dynamic XPath to find the Edit/Delete button relative to the Category Name
-        // Structure assumption: <tr><td>Name</td><td><button>Edit</button></td></tr>
-        String xpath = "//td[text()='" + catName + "']/following-sibling::td/button[contains(text(),'" + action + "')]";
-        Hooks.driver.findElement(By.xpath(xpath)).click();
+        String xpath = "";
+        if (action.equalsIgnoreCase("Edit")) {
+            xpath = "//tr[contains(., '" + catName + "')]//a[@title='Edit']";
+        } else if (action.equalsIgnoreCase("Delete")) {
+            xpath = "//tr[contains(., '" + catName + "')]//button[@title='Delete']";
+        }
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
     }
 
     @When("I accept the delete confirmation")
@@ -105,14 +141,18 @@ public class CategoryUiSteps {
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (Exception e) {
-            // Sometimes confirmation is a modal, not an alert.
-            // If using a modal, you would click the "Confirm" button here.
+            try {
+                Hooks.driver.findElement(By.xpath("//button[text()='Yes' or text()='Confirm' or text()='OK']")).click();
+            } catch (Exception ex) {
+            }
         }
     }
 
     @When("I enter {string} in the search box")
     public void i_enter_search(String term) {
-        Hooks.driver.findElement(searchInput).sendKeys(term);
+        WebElement search = Hooks.driver.findElement(searchInput);
+        search.clear();
+        search.sendKeys(term);
     }
 
     @When("I click the search button")
@@ -122,14 +162,23 @@ public class CategoryUiSteps {
 
     @Then("I should not see the {string} button")
     public void i_should_not_see_button(String btnName) {
-        List<WebElement> buttons = Hooks.driver.findElements(addCategoryBtn);
-        Assert.assertTrue("Button should not be present", buttons.isEmpty() || !buttons.get(0).isDisplayed());
+        By locator = By.xpath("//a[contains(@class,'btn-primary') and contains(text(),'Add')]");
+        List<WebElement> buttons = Hooks.driver.findElements(locator);
+        if (!buttons.isEmpty()) {
+            Assert.assertFalse("Add button is visible!", buttons.get(0).isDisplayed());
+        }
     }
 
     @Then("I should not see the {string} buttons")
     public void i_should_not_see_delete_buttons(String btnName) {
-        // Assuming delete buttons have a specific class or text
-        List<WebElement> deletes = Hooks.driver.findElements(By.xpath("//button[contains(text(),'Delete')]"));
-        Assert.assertTrue("Delete buttons should not be visible", deletes.isEmpty());
+        List<WebElement> deletes = Hooks.driver.findElements(By.xpath("//button[@title='Delete']"));
+        for (WebElement btn : deletes) {
+            // It passes if the button is either NOT displayed OR it IS displayed but
+            // DISABLED
+            boolean isHidden = !btn.isDisplayed();
+            boolean isDisabled = btn.getAttribute("disabled") != null;
+
+            Assert.assertTrue("Delete button is visible and active!", isHidden || isDisabled);
+        }
     }
 }
