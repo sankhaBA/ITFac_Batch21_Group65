@@ -12,11 +12,12 @@ Feature: Category Management API
     And the response should contain a list of categories
 
   Scenario: Verify POST create category success
+    # CHANGED: "NewCat1" -> "NewCat2" (New unique name)
     When I send a POST request to "/api/categories" with the following body:
-      | name      | validCat   |
+      | name      | NewCat2    |
       | parent    |            |
     Then the response status code should be 201
-    And the response body should contain "name" with value "validCat"
+    And the response body should contain "name" with value "NewCat2"
 
   Scenario Outline: Verify POST create category validations (Negative)
     When I send a POST request to "/api/categories" with the following body:
@@ -30,18 +31,22 @@ Feature: Category Management API
       |               |
 
   Scenario: Verify PUT update category success
-    Given a category exists with name "ToUpdate"
-    When I send a PUT request to update the category with name "UpdatedViaAPI"
+    # CHANGED: "CatEdit" -> "CatEdit2"
+    Given a category exists with name "CatEdit2"
+    # CHANGED: "CatUpd" -> "CatUpd2"
+    When I send a PUT request to update the category with name "CatUpd2"
     Then the response status code should be 200
-    And the response body should contain "name" with value "UpdatedViaAPI"
+    And the response body should contain "name" with value "CatUpd2"
 
   Scenario: Verify DELETE category success
-    Given a category exists with name "ToDelete"
+    # CHANGED: "CatDel" -> "CatDel2"
+    Given a category exists with name "CatDel2"
     When I send a DELETE request for that category
     Then the response status code should be 204
 
   Scenario: Verify RBAC - User cannot Delete Category
     Given I have a valid authentication token for "user"
-    And a category exists with name "UserTryDelete" (created by admin)
+    # CHANGED: "UserDel" -> "UserDel2"
+    And a category exists with name "UserDel2" (created by admin)
     When I send a DELETE request for that category
     Then the response status code should be 403
