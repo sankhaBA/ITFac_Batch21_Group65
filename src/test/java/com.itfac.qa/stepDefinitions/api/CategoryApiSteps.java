@@ -16,8 +16,6 @@ public class CategoryApiSteps {
     private String token;
     private Response response;
     private int currentCategoryId;
-
-    // *** NEW: Variable to store the dynamic name we generated
     private String generatedName;
 
     @Given("I have a valid authentication token for {string}")
@@ -42,25 +40,14 @@ public class CategoryApiSteps {
                 .contentType(ContentType.JSON);
     }
 
-    // *** NEW: Helper method to generate unique names
-    // It appends a timestamp ONLY if the name is meant to be valid
     private String getUniqueName(String baseName) {
-        // If name is null or empty, return it as is
         if (baseName == null || baseName.isEmpty() || baseName.equals("[empty]")) {
             return baseName;
         }
-
-        // If it's a negative test case (Short name "AB" or Long name), DO NOT randomize
-        // it
         if (baseName.length() < 3 || baseName.length() > 10) {
             return baseName;
         }
-
-        // Generate a random suffix (last 4 digits of current time)
         String suffix = String.valueOf(System.currentTimeMillis() % 10000);
-
-        // Ensure total length doesn't exceed 10 chars (API limit)
-        // If base is "NewCat", suffix is "1234" -> "NewC1234"
         int maxBaseLen = 10 - suffix.length();
         if (baseName.length() > maxBaseLen) {
             baseName = baseName.substring(0, maxBaseLen);
@@ -88,8 +75,6 @@ public class CategoryApiSteps {
     public void i_send_post(String endpoint, DataTable dataTable) {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
         String name = data.get("name");
-
-        // *** NEW: Generate unique name and store it
         generatedName = getUniqueName(name);
 
         String jsonBody = "{" +
@@ -109,14 +94,8 @@ public class CategoryApiSteps {
     @Then("the response body should contain {string} with value {string}")
     public void body_contains(String key, String expectedValue) {
         String actualValue = response.jsonPath().getString(key);
-
-        // *** NEW: Smart Assertion
-        // If we are checking "name", we compare against the generatedName (e.g.
-        // "NewCat8392")
-        // instead of the static feature file value ("NewCat")
         if (key.equals("name") && generatedName != null && expectedValue.length() >= 3
                 && expectedValue.length() <= 10) {
-            // Check if actual value starts with the expected base name
             Assert.assertEquals(generatedName, actualValue);
         } else {
             Assert.assertEquals(expectedValue, actualValue);
@@ -125,7 +104,6 @@ public class CategoryApiSteps {
 
     @Given("a category exists with name {string}")
     public void category_exists(String name) {
-        // *** NEW: Always randomize setup data
         String uniqueName = getUniqueName(name);
 
         String jsonBody = "{\"name\": \"" + uniqueName + "\"}";
@@ -140,7 +118,6 @@ public class CategoryApiSteps {
 
     @Given("a category exists with name {string} \\(created by admin)")
     public void category_exists_admin_context(String name) {
-        // 1. Get Admin Token
         String adminToken = RestAssured.given()
                 .baseUri(BASE_URI)
                 .contentType(ContentType.JSON)
@@ -148,11 +125,8 @@ public class CategoryApiSteps {
                 .post("/api/auth/login")
                 .jsonPath()
                 .getString("token");
-
-        // *** NEW: Always randomize setup data
         String uniqueName = getUniqueName(name);
 
-        // 2. Create Category
         Response setupResp = RestAssured.given()
                 .baseUri(BASE_URI)
                 .header("Authorization", "Bearer " + adminToken)
@@ -170,7 +144,6 @@ public class CategoryApiSteps {
 
     @When("I send a PUT request to update the category with name {string}")
     public void i_send_put(String newName) {
-        // *** NEW: Generate unique name for update
         generatedName = getUniqueName(newName);
 
         String jsonBody = "{\"name\": \"" + generatedName + "\"}";

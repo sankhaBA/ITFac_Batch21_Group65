@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.itfac.qa.runners.TestRunner
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.251 s -- in com.itfac.qa.runners.TestRunner
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.090 s -- in com.itfac.qa.runners.TestRunner
