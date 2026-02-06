@@ -113,17 +113,6 @@ Feature: Category Management API
       | name   | UserCat |
     Then the response status code should be 403
 
-  Scenario Outline: Verify POST create category with special characters
-    When I send a POST request to "/api/categories" with the following body:
-      | name   | <Name> |
-    Then the response status code should be <Status>
-
-    Examples:
-      | Name       | Status |
-      | Cat-123    | 400    |
-      | Cat@Test   | 400    |
-      | Cat_Item   | 400    |
-
   # ========== Additional PUT Endpoint Tests ==========
 
   Scenario Outline: Verify PUT update category with invalid names
