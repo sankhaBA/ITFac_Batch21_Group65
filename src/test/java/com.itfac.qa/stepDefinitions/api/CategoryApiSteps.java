@@ -8,6 +8,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 
+import java.util.List;
 import java.util.Map;
 
 public class CategoryApiSteps {
@@ -226,5 +227,83 @@ public class CategoryApiSteps {
         response = givenAuthenticated()
                 .body(jsonBody)
                 .put("/api/categories/" + currentCategoryId);
+    }
+
+    // ========== Additional GET Endpoint Steps ==========
+
+    @Then("the response should contain category with name containing {string}")
+    public void response_contains_category_with_name(String nameFragment) {
+        List<Map<String, Object>> categories = response.jsonPath().getList("$");
+        boolean found = categories.stream()
+                .anyMatch(cat -> {
+                    String name = (String) cat.get("name");
+                    return name != null && name.contains(nameFragment);
+                });
+        Assert.assertTrue("No category found containing: " + nameFragment, found);
+    }
+
+    @When("the category is linked to the parent")
+    public void link_category_to_parent() {
+        String jsonBody = "{" +
+                "\"name\": \"" + generatedName + "\"," +
+                "\"parentId\": " + targetParentId +
+                "}";
+
+        response = givenAuthenticated()
+                .queryParam("parentId", targetParentId)
+                .body(jsonBody)
+                .put("/api/categories/" + currentCategoryId);
+
+        Assert.assertEquals("Failed to link category to parent", 200, response.getStatusCode());
+    }
+
+    @When("I send a GET request to categories filtered by parent ID")
+    public void i_send_get_filtered_by_parent() {
+        response = givenAuthenticated().get("/api/categories?parentId=" + targetParentId);
+    }
+
+    @Then("the response should contain only categories with the specified parent")
+    public void response_contains_only_with_parent() {
+        List<Map<String, Object>> categories = response.jsonPath().getList("$");
+        for (Map<String, Object> cat : categories) {
+            String parent = (String) cat.get("parent");
+            Assert.assertEquals("Category has wrong parent", targetParentName, parent);
+        }
+    }
+
+    @When("I send a GET request with name {string} and parent ID filter")
+    public void i_send_get_with_name_and_parent(String nameFilter) {
+        response = givenAuthenticated()
+                .get("/api/categories?name=" + nameFilter + "&parentId=" + targetParentId);
+    }
+
+    @Then("the response should contain category with name containing {string} and specified parent")
+    public void response_contains_with_name_and_parent(String nameFragment) {
+        List<Map<String, Object>> categories = response.jsonPath().getList("$");
+        Assert.assertFalse("Expected at least one category in response", categories.isEmpty());
+
+        for (Map<String, Object> cat : categories) {
+            String name = (String) cat.get("name");
+            String parent = (String) cat.get("parent");
+            Assert.assertTrue("Name does not contain fragment: " + nameFragment,
+                    name != null && name.contains(nameFragment));
+            Assert.assertEquals("Parent does not match", targetParentName, parent);
+        }
+    }
+
+    @Then("the response should be an empty array")
+    public void response_is_empty_array() {
+        List<?> list = response.jsonPath().getList("$");
+        Assert.assertTrue("Expected empty array but got: " + list.size() + " items", list.isEmpty());
+    }
+
+    @When("I send a GET request for that specific category by ID")
+    public void i_send_get_by_id() {
+        response = givenAuthenticated().get("/api/categories/" + currentCategoryId);
+    }
+
+    @When("I send a DELETE request to {string}")
+    public void i_send_delete_to_endpoint(String endpoint) {
+        response = givenAuthenticated().delete(endpoint);
     }
 }
