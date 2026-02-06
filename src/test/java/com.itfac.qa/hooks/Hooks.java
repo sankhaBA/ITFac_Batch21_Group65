@@ -2,22 +2,27 @@ package com.itfac.qa.hooks;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import java.time.Duration;
 
 public class Hooks {
 
     public static WebDriver driver;
+    // CRITICAL: Update this if Ngrok restarts
+    public static final String BASE_URL = "http://localhost:8080";
 
-    @Before("@UI") 
+    @Before("@UI")
     public void setup() {
-        // Setup Chrome options (headless matches some CI environments, but keep valid for now)
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
-        
+
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @After("@UI")
