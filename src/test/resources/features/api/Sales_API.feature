@@ -20,19 +20,44 @@ Feature: Sales Management API Automation
     When I request to sell plant ID "1" with quantity "2"
     Then the response status code should be 201
 
+  # SRS Requirement: User CANNOT create a sale (Should be 403)
   Scenario: User cannot create a sale
     Given I am logged in as "User" via API
     When I request to sell plant ID "1" with quantity "1"
-    # NOTE: This SHOULD be 403, but the app has a bug and returns 201.
-    # Adjusting to 201 to allow build to pass.
-    Then the response status code should be 201
+    # This test WILL FAIL if the app has a bug (returns 201). This is GOOD.
+    Then the response status code should be 403
 
   Scenario Outline: Fail sale creation with invalid quantity
     Given I am logged in as "Admin" via API
     When I request to sell plant ID "1" with quantity "<qty>"
     Then the response status code should be 400
+    And the sales API error message should be "Quantity must be greater than 0"
 
     Examples:
       | qty |
       | 0   |
       | -5  |
+
+  Scenario: Fail on Insufficient Stock
+    Given I am logged in as "Admin" via API
+    When I request to sell plant ID "1" with quantity "1000"
+    Then the response status code should be 400
+
+  Scenario: Admin Delete Sale (Success)
+    Given I am logged in as "Admin" via API
+    When I request to sell plant ID "1" with quantity "1"
+    And I note the sale ID
+    When I send a DELETE request to that sale ID
+    # SRS doesn't specify 200 vs 204, but 204 is standard success.
+    # If this fails with 200, report it as a minor consistency bug.
+    Then the response status code should be 204
+
+  # SRS Requirement: User CANNOT delete a sale (Should be 403)
+  Scenario: User Delete Sale (Fail)
+    Given I am logged in as "Admin" via API
+    When I request to sell plant ID "1" with quantity "1"
+    And I note the sale ID
+    Given I am logged in as "User" via API
+    When I send a DELETE request to that sale ID
+    # This test WILL FAIL if the app allows it (returns 204/200). This is GOOD.
+    Then the response status code should be 403
