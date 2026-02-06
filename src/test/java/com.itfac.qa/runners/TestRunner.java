@@ -6,7 +6,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources/features", glue = { "com.itfac.qa.stepDefinitions",
-                "com.itfac.qa.hooks" }, tags = "@UI", plugin = { "pretty",
-                                "html:target/cucumber-reports.html" }, monochrome = true)
+        "com.itfac.qa.hooks" }, tags = "@UI", plugin = { "pretty",
+                "html:target/cucumber-reports.html" }, monochrome = true)
 public class TestRunner {
 }
