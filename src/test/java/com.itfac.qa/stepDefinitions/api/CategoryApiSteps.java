@@ -120,8 +120,6 @@ public class CategoryApiSteps {
         // currentCategoryId = setupResp.jsonPath().getInt("id");
 
         generatedName = getUniqueName(name);
-
-        // Update the JSON body to use 'generatedName'
         String jsonBody = "{\"name\": \"" + generatedName + "\"}";
 
         Response setupResp = givenAuthenticated().body(jsonBody).post("/api/categories");
@@ -184,28 +182,21 @@ public class CategoryApiSteps {
 
     @Given("a parent category exists with name {string}")
     public void parent_category_exists(String name) {
-        // Reuse existing logic to create
         category_exists(name);
         targetParentId = currentCategoryId;
-
-        // SAVE THE NAME! We need this for verification
         targetParentName = generatedName;
-
-        // Reset for the next step
         currentCategoryId = 0;
     }
 
     @When("I send a PUT request to link the category to the parent")
     public void i_link_category_to_parent() {
-        // STRATEGY: Try sending parentId as a Query Param
-        // AND as a Body field (Double Attack).
         String jsonBody = "{" +
                 "\"name\": \"" + generatedName + "\"," +
                 "\"parentId\": " + targetParentId +
                 "}";
 
         response = givenAuthenticated()
-                .queryParam("parentId", targetParentId) // Add as Query Param
+                .queryParam("parentId", targetParentId)
                 .body(jsonBody)
                 .put("/api/categories/" + currentCategoryId);
 
@@ -214,22 +205,26 @@ public class CategoryApiSteps {
 
     @Then("the response body should contain {string} with value from the parent category")
     public void response_contains_parent_id(String key) {
-        // 1. Force a refresh! Fetch the category again from the server to get the
-        // latest data.
-        // (Sometimes PUT responses are incomplete, but GET requests return full
-        // details)
         response = givenAuthenticated().get("/api/categories/" + currentCategoryId);
-
-        // 2. Now extract the parent name from this fresh response
         String actualParentName = response.jsonPath().getString("parent");
-
-        // Debugging prints
         System.out.println("DEBUG: ID Sent: " + targetParentId);
         System.out.println("DEBUG: Expected Parent Name: " + targetParentName);
         System.out.println("DEBUG: Actual Parent Name (from fresh GET): " + actualParentName);
-
-        // 3. Verify
         Assert.assertNotNull("Parent field was null in database!", actualParentName);
         Assert.assertEquals("Parent Name did not match!", targetParentName, actualParentName);
+    }
+
+    @When("I send a PUT request to link the category using strictly {string}")
+    public void i_send_put_strict_compliance(String fieldName) {
+        String jsonBody = "{" +
+                "\"name\": \"" + generatedName + "\"," +
+                "\"parentId\": " + targetParentId +
+                "}";
+
+        System.out.println("DEBUG: Testing Swagger Compliance. Body: " + jsonBody);
+
+        response = givenAuthenticated()
+                .body(jsonBody)
+                .put("/api/categories/" + currentCategoryId);
     }
 }

@@ -48,6 +48,14 @@ Feature: Category Management API
     Then the response status code should be 200
     And the response body should contain "parent" with value from the parent category
 
+  @API @Bug @SwaggerMismatch
+  Scenario: Verify PUT request compliance with Swagger Schema (parentId)
+    Given I have a valid authentication token for "admin"
+    And a parent category exists with name "SwgrParnt"
+    And a category exists with name "SwgrChld"
+    When I send a PUT request to link the category using strictly "parentId"
+    Then the response body should contain "parent" with value from the parent category
+
   Scenario: Verify DELETE category success
     Given a category exists with name "CatDel2"
     When I send a DELETE request for that category

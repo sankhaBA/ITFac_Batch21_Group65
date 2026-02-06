@@ -1,12 +1,20 @@
 -------------------------------------------------------------------------------
 Test set: com.itfac.qa.runners.TestRunner
 -------------------------------------------------------------------------------
-Tests run: 10, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.782 s <<< FAILURE! -- in com.itfac.qa.runners.TestRunner
-Category Management API.Verify PUT update category parent (Move Category) -- Time elapsed: 0.367 s <<< FAILURE!
+Tests run: 11, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 4.383 s <<< FAILURE! -- in com.itfac.qa.runners.TestRunner
+Category Management API.Verify PUT update category parent (Move Category) -- Time elapsed: 0.308 s <<< FAILURE!
 java.lang.AssertionError: Parent field was null in database!
 	at org.junit.Assert.fail(Assert.java:89)
 	at org.junit.Assert.assertTrue(Assert.java:42)
 	at org.junit.Assert.assertNotNull(Assert.java:713)
-	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.response_contains_parent_id(CategoryApiSteps.java:232)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.response_contains_parent_id(CategoryApiSteps.java:213)
 	at ✽.the response body should contain "parent" with value from the parent category(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:49)
+
+Category Management API.Verify PUT request compliance with Swagger Schema (parentId) -- Time elapsed: 0.292 s <<< FAILURE!
+java.lang.AssertionError: Parent field was null in database!
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.itfac.qa.stepDefinitions.api.CategoryApiSteps.response_contains_parent_id(CategoryApiSteps.java:213)
+	at ✽.the response body should contain "parent" with value from the parent category(file:///D:/Aca/L4S1/QA/Assessment/ITFac_Batch21_Group65/src/test/resources/features/api/Category_API.feature:57)
 
