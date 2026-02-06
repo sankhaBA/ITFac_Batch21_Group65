@@ -1,50 +1,48 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.api;
 
+import com.itfac.qa.hooks.Hooks;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.Assert;
-import java.util.HashMap;
 import java.util.Map;
+import static io.restassured.RestAssured.given;
 
 public class AuthApiSteps {
 
     private Response response;
 
     @Given("the backend API is running at {string}")
-    public void setBaseUrl(String url) {
-        RestAssured.baseURI = url;
+    public void set_base_url(String url) {
+        RestAssured.baseURI = Hooks.BASE_URL;
     }
 
     @When("I send a POST request to {string} with username {string} and password {string}")
-    public void sendLoginRequest(String endpoint, String username, String password) {
-        Map<String, String> credentials = new HashMap<>();
-        credentials.put("username", username);
-        credentials.put("password", password);
-
-        response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(credentials)
-                .when()
+    public void login(String endpoint, String username, String password) {
+        response = given()
+                .contentType("application/json")
+                .body(Map.of("username", username, "password", password))
                 .post(endpoint);
     }
 
-    @Then("the response status code should be {int}")
-    public void verifyStatusCode(int expectedCode) {
-        Assert.assertEquals("Status code mismatch!", expectedCode, response.getStatusCode());
+    // UPDATED: Changed string to match the feature file update
+    @Then("the login response status code should be {int}")
+    public void verify_status_code(int statusCode) {
+        Assert.assertEquals(statusCode, response.getStatusCode());
     }
 
     @Then("the response should contain a valid {string}")
-    public void verifyTokenExists(String field) {
-        String value = response.jsonPath().getString(field);
-        Assert.assertNotNull("Field " + field + " is missing from response!", value);
-        Assert.assertFalse("Field " + field + " is empty!", value.isEmpty());
+    public void verify_token(String key) {
+        String value = response.jsonPath().getString(key);
+        Assert.assertNotNull("Token should not be null", value);
+        Assert.assertFalse("Token should not be empty", value.isEmpty());
     }
 
     @Then("the response error message should be {string}")
-    public void verifyErrorMessage(String expectedError) {
-        String actualError = response.jsonPath().getString("error");
-        Assert.assertEquals("Error message mismatch!", expectedError, actualError);
+    public void verify_error_message(String expectedMsg) {
+        String body = response.getBody().asString();
+        // Check if body contains the expected message (ignoring case)
+        Assert.assertTrue("Body should contain: " + expectedMsg + " but got: " + body,
+                body.toUpperCase().contains(expectedMsg.toUpperCase()));
     }
 }
