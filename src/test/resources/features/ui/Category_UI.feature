@@ -80,4 +80,61 @@ Feature: Category Management UI
     Then I should not see the "Add Category" button
     And I should not see the "Delete" buttons
 
+  # ========== Additional Search Tests ==========
+
+  @Regression
+  Scenario: Verify search by parent category only
+    When I select "Roses" from the parent category dropdown
+    And I click the search button
+    Then I should see categories with parent "Roses"
+
+  @Regression
+  Scenario: Verify search by both parent and sub-category
+    When I select "Roses" from the parent category dropdown
+    And I enter "Red" in the search box
+    And I click the search button
+    Then I should see "Red" in the category list
+    And the displayed categories should have parent "Roses"
+
+  # ========== Additional Creation Tests ==========
+
+  Scenario: Verify Admin can create category with parent selected
+    When I click the "Add Category" button
+    And I enter "ChildCat" in the category name field
+    And I select "Roses" from the parent dropdown
+    And I click the "Save" button
+    Then I should see a success message "Category created successfully"
+    And I should see "ChildCat" in the category list
+
+  Scenario: Verify created category appears in list correctly
+    When I click the "Add Category" button
+    And I enter "NewItem" in the category name field
+    And I click the "Save" button
+    Then I should see a success message "Category created successfully"
+    And I should see "NewItem" in the category list
+    And the category "NewItem" should be displayed with correct details
+
+  # ========== Additional Edit Tests ==========
+
+  Scenario: Verify updated category displays correctly in list
+    When I click the "Edit" button for the category "NewItem"
+    And I enter "UpdatedNew" in the category name field
+    And I click the "Save" button
+    Then I should see a success message "Category updated successfully"
+    And I should see "UpdatedNew" in the category list
+    And I should not see "NewItem" in the category list
+
+  # ========== Additional RBAC Tests ==========
+
+  Scenario: Verify Admin can see all management buttons
+    Then I should see the "Add Category" button
+    And I should see the "Edit" buttons for categories
+    And I should see the "Delete" buttons for categories
+
+  Scenario: Verify User cannot see Edit buttons
+    Given I click the "Logout" button
+    And I am logged in as "User"
+    When I navigate to the "Categories" page
+    Then I should not see the "Edit" buttons
+
  

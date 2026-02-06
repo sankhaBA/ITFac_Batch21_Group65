@@ -166,15 +166,26 @@ public class CategoryUiSteps {
     }
 
     @Then("I should not see the {string} buttons")
-    public void i_should_not_see_delete_buttons(String btnName) {
-        List<WebElement> deletes = Hooks.driver.findElements(By.xpath("//button[@title='Delete']"));
-        for (WebElement btn : deletes) {
-            // It passes if the button is either NOT displayed OR it IS displayed but
-            // DISABLED
+    public void i_should_not_see_buttons(String btnName) {
+        By locator;
+        String errorMessage;
+        
+        if (btnName.equals("Edit")) {
+            locator = By.xpath("//a[@title='Edit']");
+            errorMessage = "Edit button is visible and active!";
+        } else if (btnName.equals("Delete")) {
+            locator = By.xpath("//button[@title='Delete']");
+            errorMessage = "Delete button is visible and active!";
+        } else {
+            return;
+        }
+        
+        List<WebElement> buttons = Hooks.driver.findElements(locator);
+        for (WebElement btn : buttons) {
+            // It passes if the button is either NOT displayed OR it IS displayed but DISABLED
             boolean isHidden = !btn.isDisplayed();
             boolean isDisabled = btn.getAttribute("disabled") != null;
-
-            Assert.assertTrue("Delete button is visible and active!", isHidden || isDisabled);
+            Assert.assertTrue(errorMessage, isHidden || isDisabled);
         }
     }
 
@@ -185,6 +196,75 @@ public class CategoryUiSteps {
             By addBtn = By.xpath("//a[contains(@class,'btn-primary') and contains(text(),'Add')]");
             WebElement btn = wait.until(ExpectedConditions.visibilityOfElementLocated(addBtn));
             Assert.assertTrue("Add Category button should be visible!", btn.isDisplayed());
+        }
+    }
+
+    // ========== Additional Search Steps ==========
+
+    @When("I select {string} from the parent category dropdown")
+    public void i_select_from_parent_dropdown(String parentName) {
+        By dropdownLocator = By.cssSelector("select[name='parentId'], select#parentCategory");
+        WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(dropdownLocator));
+        dropdown.click();
+
+        By optionLocator = By.xpath("//option[contains(text(),'" + parentName + "')]");
+        WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionLocator));
+        option.click();
+    }
+
+    @Then("I should see categories with parent {string}")
+    public void i_should_see_categories_with_parent(String parentName) {
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), parentName));
+        List<WebElement> parentCells = Hooks.driver
+                .findElements(By.xpath("//table//tr//td[contains(text(),'" + parentName + "')]"));
+        Assert.assertTrue("No categories found with parent: " + parentName, parentCells.size() > 0);
+    }
+
+    @Then("the displayed categories should have parent {string}")
+    public void displayed_categories_have_parent(String parentName) {
+        i_should_see_categories_with_parent(parentName);
+    }
+
+    // ========== Additional Creation Steps ==========
+
+    @When("I select {string} from the parent dropdown")
+    public void i_select_parent_from_dropdown(String parentName) {
+        By dropdownLocator = By.cssSelector("select[name='parentId'], select#parent");
+        WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(dropdownLocator));
+        dropdown.click();
+
+        By optionLocator = By.xpath("//option[contains(text(),'" + parentName + "')]");
+        WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionLocator));
+        option.click();
+    }
+
+    @Then("the category {string} should be displayed with correct details")
+    public void category_displayed_with_correct_details(String catName) {
+        By categoryRow = By.xpath("//tr[contains(.,'" + catName + "')]");
+        WebElement row = wait.until(ExpectedConditions.visibilityOfElementLocated(categoryRow));
+        Assert.assertTrue("Category row not found for: " + catName, row.isDisplayed());
+    }
+
+    @Then("I should not see {string} in the category list")
+    public void i_should_not_see_in_list(String catName) {
+        List<WebElement> elements = Hooks.driver
+                .findElements(By.xpath("//*[contains(text(),'" + catName + "')]"));
+        Assert.assertTrue("Category '" + catName + "' should not be visible but was found",
+                elements.isEmpty() || !elements.get(0).isDisplayed());
+    }
+
+    // ========== Additional RBAC Steps ==========
+
+    @Then("I should see the {string} buttons for categories")
+    public void i_should_see_buttons_for_categories(String btnName) {
+        if (btnName.equals("Edit")) {
+            List<WebElement> editButtons = Hooks.driver.findElements(By.xpath("//a[@title='Edit']"));
+            Assert.assertTrue("Edit buttons should be visible", editButtons.size() > 0);
+            Assert.assertTrue("At least one Edit button should be displayed", editButtons.get(0).isDisplayed());
+        } else if (btnName.equals("Delete")) {
+            List<WebElement> deleteButtons = Hooks.driver.findElements(By.xpath("//button[@title='Delete']"));
+            Assert.assertTrue("Delete buttons should be visible", deleteButtons.size() > 0);
+            Assert.assertTrue("At least one Delete button should be displayed", deleteButtons.get(0).isDisplayed());
         }
     }
 }
