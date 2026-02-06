@@ -35,10 +35,30 @@ Feature: Category Management UI
     Then I should see a success message "Category updated successfully"
     And I should see "CatUpdated" in the category list
 
+   Scenario Outline: Verify Category Edit Validation
+    When I click the "Edit" button for the category "CatUpdated"
+    And I enter "<Name>" in the category name field
+    And I click the "Save" button
+    Then I should see a validation error "<ErrorMessage>"
+
+    Examples:
+      | Name             | ErrorMessage                                       |
+      | AB               | Category name must be between 3 and 10 characters. |
+      | ThisNameIsTooLong| Category name must be between 3 and 10 characters. |
+      |                  | Category name is required.                         |
+
+  Scenario: Verify Admin can Cancel editing
+    When I click the "Edit" button for the category "CatUpdated"
+    And I click the "Cancel" button
+    # Verifies we are back on the list page by checking for the "Add" button existence
+    Then I should see the "Add Category" button
+
   Scenario: Verify Admin can Delete a category
     When I click the "Delete" button for the category "CatUpdated"
     And I accept the delete confirmation
     Then I should see a success message "Category deleted successfully"
+
+  
 
   @Regression
   Scenario Outline: Verify Search functionality
@@ -59,3 +79,5 @@ Feature: Category Management UI
     When I navigate to the "Categories" page
     Then I should not see the "Add Category" button
     And I should not see the "Delete" buttons
+
+ 

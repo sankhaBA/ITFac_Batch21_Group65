@@ -26,18 +26,12 @@ public class CategoryUiSteps {
 
     // --- LOCATORS ---
 
-    // Login
     By usernameField = By.xpath("//input[@name='username']");
     By passwordField = By.xpath("//input[@name='password']");
     By loginBtn = By.xpath("//button[contains(text(),'Login') or contains(text(),'Sign')]");
-
-    // Navigation & Global Buttons
-    // UPDATED: Looks for text 'Logout', OR title 'Logout', OR link containing
-    // 'logout'
+    By cancelBtn = By.xpath("//a[contains(text(),'Cancel')] | //button[contains(text(),'Cancel')]");
     By logoutBtn = By.xpath("//*[contains(text(),'Logout')] | //*[@title='Logout'] | //a[contains(@href,'logout')]");
     By menuCategories = By.cssSelector("a[href*='categories']");
-
-    // Page Elements
     By searchInput = By.cssSelector("input[placeholder*='Search']");
     By searchBtn = By.xpath("//button[contains(text(),'Search')]");
     By nameInput = By.cssSelector("input[id='name'], input[name='name']");
@@ -86,6 +80,8 @@ public class CategoryUiSteps {
             locator = logoutBtn;
         } else if (btnName.equals("Search")) {
             locator = searchBtn;
+        } else if (btnName.equals("Cancel")) {
+            locator = cancelBtn;
         }
 
         try {
@@ -179,6 +175,16 @@ public class CategoryUiSteps {
             boolean isDisabled = btn.getAttribute("disabled") != null;
 
             Assert.assertTrue("Delete button is visible and active!", isHidden || isDisabled);
+        }
+    }
+
+    @Then("I should see the {string} button")
+    public void i_should_see_button(String btnName) {
+        if (btnName.equals("Add Category")) {
+            // Re-using the Add Category locator to check for visibility
+            By addBtn = By.xpath("//a[contains(@class,'btn-primary') and contains(text(),'Add')]");
+            WebElement btn = wait.until(ExpectedConditions.visibilityOfElementLocated(addBtn));
+            Assert.assertTrue("Add Category button should be visible!", btn.isDisplayed());
         }
     }
 }
