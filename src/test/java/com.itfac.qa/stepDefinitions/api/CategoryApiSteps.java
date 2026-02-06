@@ -16,6 +16,8 @@ public class CategoryApiSteps {
     private String token;
     private Response response;
     private int currentCategoryId;
+    private int targetParentId;
+    private String targetParentName;
     private String generatedName;
 
     @Given("I have a valid authentication token for {string}")
@@ -104,9 +106,24 @@ public class CategoryApiSteps {
 
     @Given("a category exists with name {string}")
     public void category_exists(String name) {
-        String uniqueName = getUniqueName(name);
+        // String uniqueName = getUniqueName(name);
 
-        String jsonBody = "{\"name\": \"" + uniqueName + "\"}";
+        // String jsonBody = "{\"name\": \"" + uniqueName + "\"}";
+        // Response setupResp =
+        // givenAuthenticated().body(jsonBody).post("/api/categories");
+
+        // if (setupResp.getStatusCode() >= 400) {
+        // throw new RuntimeException(
+        // "Setup Failed. Status: " + setupResp.getStatusCode() + " Msg: " +
+        // setupResp.getBody().asString());
+        // }
+        // currentCategoryId = setupResp.jsonPath().getInt("id");
+
+        generatedName = getUniqueName(name);
+
+        // Update the JSON body to use 'generatedName'
+        String jsonBody = "{\"name\": \"" + generatedName + "\"}";
+
         Response setupResp = givenAuthenticated().body(jsonBody).post("/api/categories");
 
         if (setupResp.getStatusCode() >= 400) {
@@ -155,5 +172,64 @@ public class CategoryApiSteps {
     @When("I send a DELETE request for that category")
     public void i_send_delete() {
         response = givenAuthenticated().delete("/api/categories/" + currentCategoryId);
+    }
+
+    @When("I send a PUT request to update a non-existent category with ID {int}")
+    public void i_update_non_existent_category(int id) {
+        String jsonBody = "{\"name\": \"PhantomCategory\"}";
+        response = givenAuthenticated()
+                .body(jsonBody)
+                .put("/api/categories/" + id);
+    }
+
+    @Given("a parent category exists with name {string}")
+    public void parent_category_exists(String name) {
+        // Reuse existing logic to create
+        category_exists(name);
+        targetParentId = currentCategoryId;
+
+        // SAVE THE NAME! We need this for verification
+        targetParentName = generatedName;
+
+        // Reset for the next step
+        currentCategoryId = 0;
+    }
+
+    @When("I send a PUT request to link the category to the parent")
+    public void i_link_category_to_parent() {
+        // STRATEGY: Try sending parentId as a Query Param
+        // AND as a Body field (Double Attack).
+        String jsonBody = "{" +
+                "\"name\": \"" + generatedName + "\"," +
+                "\"parentId\": " + targetParentId +
+                "}";
+
+        response = givenAuthenticated()
+                .queryParam("parentId", targetParentId) // Add as Query Param
+                .body(jsonBody)
+                .put("/api/categories/" + currentCategoryId);
+
+        System.out.println("DEBUG: Sending PUT (QueryParam + Body) to /api/categories/" + currentCategoryId);
+    }
+
+    @Then("the response body should contain {string} with value from the parent category")
+    public void response_contains_parent_id(String key) {
+        // 1. Force a refresh! Fetch the category again from the server to get the
+        // latest data.
+        // (Sometimes PUT responses are incomplete, but GET requests return full
+        // details)
+        response = givenAuthenticated().get("/api/categories/" + currentCategoryId);
+
+        // 2. Now extract the parent name from this fresh response
+        String actualParentName = response.jsonPath().getString("parent");
+
+        // Debugging prints
+        System.out.println("DEBUG: ID Sent: " + targetParentId);
+        System.out.println("DEBUG: Expected Parent Name: " + targetParentName);
+        System.out.println("DEBUG: Actual Parent Name (from fresh GET): " + actualParentName);
+
+        // 3. Verify
+        Assert.assertNotNull("Parent field was null in database!", actualParentName);
+        Assert.assertEquals("Parent Name did not match!", targetParentName, actualParentName);
     }
 }
