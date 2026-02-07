@@ -1,10 +1,11 @@
-package com.itfac.qa.stepDefinitions.ui;
+package com.itfac.qa.steps.ui;
 
 import com.itfac.qa.hooks.Hooks;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
@@ -72,10 +73,12 @@ public class SalesUiSteps {
     @When("I select {string} from the plant dropdown")
     public void i_select_plant(String plantName) {
         WebElement dropdown = getDriver().findElement(By.id("plantId"));
-        dropdown.click();
+        Select select = new Select(dropdown);
         try {
-            dropdown.findElement(By.xpath("//option[contains(text(), '" + plantName + "')]")).click();
-        } catch (Exception e) { dropdown.findElement(By.xpath("//option[2]")).click(); }
+            select.selectByVisibleText(plantName);
+        } catch (Exception e) { 
+            select.selectByIndex(1); // Select second option if plant name not found
+        }
     }
 
     @When("I enter quantity {string}")

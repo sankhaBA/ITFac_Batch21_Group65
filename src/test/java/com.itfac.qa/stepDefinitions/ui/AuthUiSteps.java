@@ -1,4 +1,4 @@
-package com.itfac.qa.stepDefinitions.ui;
+package com.itfac.qa.steps.ui;
 
 import com.itfac.qa.hooks.Hooks;
 import io.cucumber.java.en.*;
