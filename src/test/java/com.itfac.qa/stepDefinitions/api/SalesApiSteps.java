@@ -1,6 +1,8 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.api;
 
 import com.itfac.qa.hooks.Hooks;
+import com.itfac.qa.utils.AuthenticationHelper;
+import com.itfac.qa.utils.ConfigurationManager;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -11,7 +13,9 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 
 public class SalesApiSteps {
-    private String BASE_URI = "http://localhost:8080";
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
+    private final AuthenticationHelper authHelper = new AuthenticationHelper();
+    private String BASE_URI = config.getApiBaseUrl();
     private Response response;
     private RequestSpecification request;
     private String jwtToken;
@@ -24,16 +28,8 @@ public class SalesApiSteps {
 
     @Given("I am logged in as {string} via API")
     public void i_am_logged_in_as_via_api(String role) {
-        String username = role.equalsIgnoreCase("Admin") ? "admin" : "testuser";
-        String password = role.equalsIgnoreCase("Admin") ? "admin123" : "test123";
-
-        Response loginResp = given()
-                .contentType("application/json")
-                .body(Map.of("username", username, "password", password))
-                .post("/api/auth/login");
-
-        this.jwtToken = loginResp.jsonPath().getString("token");
-        this.request = given().header("Authorization", "Bearer " + jwtToken);
+        this.jwtToken = authHelper.authenticateByRole(role);
+        this.request = authHelper.getAuthenticatedRequest();
     }
 
     @When("I send a GET request to sales API {string}")

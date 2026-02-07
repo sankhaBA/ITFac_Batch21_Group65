@@ -1,6 +1,8 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.ui;
 
 import com.itfac.qa.hooks.Hooks;
+import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.LoginHelper;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,53 +14,52 @@ import java.time.Duration;
 
 public class AuthUiSteps {
 
-    WebDriver driver = Hooks.driver;
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
+
+    private WebDriver getDriver() {
+        return Hooks.getDriver();
+    }
+
+    private WebDriverWait getWait() {
+        return new WebDriverWait(getDriver(), Duration.ofSeconds(config.getExplicitWait()));
+    }
 
     @Given("I open the application login page")
     public void openLoginPage() {
-        driver.get("http://localhost:8080/ui/login");
+        LoginHelper.navigateToLoginPage();
     }
 
     @When("I enter username {string}")
     public void enterUsername(String username) {
         if (username != null && !username.isEmpty()) {
-            // CHANGED: used By.name("username") because ID is missing
-            WebElement userField = driver.findElement(By.name("username"));
-            userField.clear();
-            userField.sendKeys(username);
+            LoginHelper.enterUsername(username);
         }
     }
 
     @When("I enter password {string}")
     public void enterPassword(String password) {
         if (password != null && !password.isEmpty()) {
-            // CHANGED: used By.name("password") because ID is missing
-            WebElement passField = driver.findElement(By.name("password"));
-            passField.clear();
-            passField.sendKeys(password);
+            LoginHelper.enterPassword(password);
         }
     }
 
     @When("I click the login button")
     public void clickLogin() {
-        // CHANGED: used CSS Selector to find the button with type="submit"
-        // Alternative: By.xpath("//button[contains(text(), 'Login')]")
-        driver.findElement(By.cssSelector("button[type='submit']")).click();
+        LoginHelper.clickLoginButton();
     }
 
     @Then("I should be redirected to the Dashboard")
     public void verifyRedirect() {
         // Wait for URL to change
-        wait.until(ExpectedConditions.urlContains("dashboard"));
-        String currentUrl = driver.getCurrentUrl();
+        getWait().until(ExpectedConditions.urlContains("dashboard"));
+        String currentUrl = getDriver().getCurrentUrl();
         Assert.assertTrue("Not on dashboard!", currentUrl.contains("dashboard"));
     }
 
     @Then("I should see an error message saying {string}")
     public void verifyGlobalError(String errorMsg) {
         // Inspect the error message element on your app
-        WebElement errorAlert = wait
+        WebElement errorAlert = getWait()
                 .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".alert-danger")));
         Assert.assertTrue(errorAlert.getText().contains(errorMsg));
     }
@@ -68,7 +69,7 @@ public class AuthUiSteps {
         // Assuming validation errors have a class like 'text-danger' or 'error-msg'
         // You might need to adjust this xpath to find text anywhere on page if specific
         // ID isn't known
-        boolean textPresent = driver.getPageSource().contains(expectedMsg);
+        boolean textPresent = getDriver().getPageSource().contains(expectedMsg);
         Assert.assertTrue("Validation message not found!", textPresent);
     }
 
@@ -85,13 +86,13 @@ public class AuthUiSteps {
 
     @Then("I should be redirected to the Login page")
     public void verifyLoginRedirect() {
-        wait.until(ExpectedConditions.urlContains("login"));
-        Assert.assertTrue(driver.getCurrentUrl().contains("login"));
+        getWait().until(ExpectedConditions.urlContains("login"));
+        Assert.assertTrue(getDriver().getCurrentUrl().contains("login"));
     }
 
     @Then("I should see a success message")
     public void verifySuccessMsg() {
-        boolean successMsg = driver.getPageSource().contains("You have been logged out successfully."); // Adjust based
+        boolean successMsg = getDriver().getPageSource().contains("You have been logged out successfully."); // Adjust based
                                                                                                         // on actual
                                                                                                         // message
         Assert.assertTrue(successMsg);

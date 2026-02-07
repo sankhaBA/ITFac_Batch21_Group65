@@ -1,4 +1,4 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.api;
 
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;

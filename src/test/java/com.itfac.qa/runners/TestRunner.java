@@ -5,7 +5,7 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features", glue = { "com.itfac.qa.steps",
+@CucumberOptions(features = "src/test/resources/features", glue = { "com.itfac.qa.stepDefinitions",
         "com.itfac.qa.hooks" }, tags = "@UI or @API", plugin = { "pretty",
                 "html:target/cucumber-reports.html" }, monochrome = true)
 public class TestRunner {

@@ -1,11 +1,14 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.ui;
 
 import com.itfac.qa.hooks.Hooks;
+import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.LoginHelper;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -16,20 +19,19 @@ import java.util.List;
 
 public class CategoryUiSteps {
 
-    WebDriverWait wait = new WebDriverWait(Hooks.driver, Duration.ofSeconds(15));
-    String BASE_URL = "http://localhost:8080/ui";
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
+    String BASE_URL = config.getUiBaseUrl();
 
-    // --- CREDENTIALS ---
-    private final String ADMIN_USER = "admin";
-    private final String ADMIN_PASS = "admin123";
-    private final String REGULAR_USER = "testuser";
-    private final String REGULAR_PASS = "test123";
+    private WebDriver getDriver() {
+        return Hooks.getDriver();
+    }
+
+    private WebDriverWait getWait() {
+        return new WebDriverWait(getDriver(), Duration.ofSeconds(config.getExplicitWait()));
+    }
 
     // --- LOCATORS ---
 
-    By usernameField = By.xpath("//input[@name='username']");
-    By passwordField = By.xpath("//input[@name='password']");
-    By loginBtn = By.xpath("//button[contains(text(),'Login') or contains(text(),'Sign')]");
     By cancelBtn = By.xpath("//a[contains(text(),'Cancel')] | //button[contains(text(),'Cancel')]");
     By logoutBtn = By.xpath("//*[contains(text(),'Logout')] | //*[@title='Logout'] | //a[contains(@href,'logout')]");
     By menuCategories = By.cssSelector("a[href*='categories']");
@@ -41,31 +43,18 @@ public class CategoryUiSteps {
 
     @Given("I open the application")
     public void i_open_the_application() {
-        Hooks.driver.get(BASE_URL + "/login");
+        LoginHelper.navigateToLoginPage();
     }
 
     @Given("I am logged in as {string}")
     public void i_am_logged_in_as_role(String role) {
-        String user = role.equalsIgnoreCase("Admin") ? ADMIN_USER : REGULAR_USER;
-        String pass = role.equalsIgnoreCase("Admin") ? ADMIN_PASS : REGULAR_PASS;
-        performLogin(user, pass);
-    }
-
-    private void performLogin(String user, String pass) {
-        try {
-            if (Hooks.driver.findElements(usernameField).size() > 0) {
-                wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).sendKeys(user);
-                Hooks.driver.findElement(passwordField).sendKeys(pass);
-                Hooks.driver.findElement(loginBtn).click();
-            }
-        } catch (Exception e) {
-        }
+        LoginHelper.loginByRole(role);
     }
 
     @Given("I navigate to the {string} page")
     public void i_navigate_to_page(String pageName) {
         if (pageName.equalsIgnoreCase("Categories")) {
-            wait.until(ExpectedConditions.elementToBeClickable(menuCategories)).click();
+            getWait().until(ExpectedConditions.elementToBeClickable(menuCategories)).click();
         }
     }
 
@@ -86,7 +75,7 @@ public class CategoryUiSteps {
         }
 
         try {
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+            WebElement element = getWait().until(ExpectedConditions.elementToBeClickable(locator));
             element.click();
             
             // For Save button, wait a moment for any client-side validation to run
@@ -100,8 +89,8 @@ public class CategoryUiSteps {
         } catch (Exception e) {
             // Fallback: If standard click fails (e.g. obscured), use Javascript Force Click
             System.out.println("Standard click failed for " + btnName + ". Attempting Force Click.");
-            WebElement element = Hooks.driver.findElement(locator);
-            ((JavascriptExecutor) Hooks.driver).executeScript("arguments[0].click();", element);
+            WebElement element = getDriver().findElement(locator);
+            ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
             
             if (btnName.equals("Save")) {
                 try {
@@ -115,7 +104,7 @@ public class CategoryUiSteps {
 
     @When("I enter {string} in the category name field")
     public void i_enter_name(String name) {
-        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(nameInput));
+        WebElement input = getWait().until(ExpectedConditions.visibilityOfElementLocated(nameInput));
         input.clear();
         input.sendKeys(name);
     }
@@ -123,15 +112,15 @@ public class CategoryUiSteps {
     @Then("I should see a success message {string}")
     public void i_should_see_success(String msg) {
         try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'" + msg + "')]")));
+            getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'" + msg + "')]")));
         } catch (Exception e) {
             // Capture what's actually on the page for debugging
-            String pageSource = Hooks.driver.getPageSource();
-            String currentUrl = Hooks.driver.getCurrentUrl();
+            String pageSource = getDriver().getPageSource();
+            String currentUrl = getDriver().getCurrentUrl();
             
             // Check for error messages
-            List<WebElement> errors = Hooks.driver.findElements(errorLocator);
-            List<WebElement> alerts = Hooks.driver.findElements(By.cssSelector(".alert, .error, .danger"));
+            List<WebElement> errors = getDriver().findElements(errorLocator);
+            List<WebElement> alerts = getDriver().findElements(By.cssSelector(".alert, .error, .danger"));
             
             String debugInfo = "\n=== DEBUG INFO ===\n" +
                     "Current URL: " + currentUrl + "\n" +
@@ -153,7 +142,7 @@ public class CategoryUiSteps {
 
     @Then("I should see a validation error {string}")
     public void i_should_see_error(String expectedError) {
-        WebElement errorElem = wait.until(ExpectedConditions.visibilityOfElementLocated(errorLocator));
+        WebElement errorElem = getWait().until(ExpectedConditions.visibilityOfElementLocated(errorLocator));
         String actualError = errorElem.getText().trim();
         String expectedClean = expectedError.replace(".", "").trim();
         String actualClean = actualError.replace(".", "").trim();
@@ -162,7 +151,7 @@ public class CategoryUiSteps {
 
     @Then("I should see {string} in the category list")
     public void i_should_see_in_list(String catName) {
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), catName));
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), catName));
     }
 
     @When("I click the {string} button for the category {string}")
@@ -173,17 +162,17 @@ public class CategoryUiSteps {
         } else if (action.equalsIgnoreCase("Delete")) {
             xpath = "//tr[contains(., '" + catName + "')]//button[@title='Delete']";
         }
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
     }
 
     @When("I accept the delete confirmation")
     public void i_accept_alert() {
         try {
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            Alert alert = getWait().until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (Exception e) {
             try {
-                Hooks.driver.findElement(By.xpath("//button[text()='Yes' or text()='Confirm' or text()='OK']")).click();
+                getDriver().findElement(By.xpath("//button[text()='Yes' or text()='Confirm' or text()='OK']")).click();
             } catch (Exception ex) {
             }
         }
@@ -191,20 +180,20 @@ public class CategoryUiSteps {
 
     @When("I enter {string} in the search box")
     public void i_enter_search(String term) {
-        WebElement search = Hooks.driver.findElement(searchInput);
+        WebElement search = getDriver().findElement(searchInput);
         search.clear();
         search.sendKeys(term);
     }
 
     @When("I click the search button")
     public void i_click_search() {
-        Hooks.driver.findElement(searchBtn).click();
+        getDriver().findElement(searchBtn).click();
     }
 
     @Then("I should not see the {string} button")
     public void i_should_not_see_button(String btnName) {
         By locator = By.xpath("//a[contains(@class,'btn-primary') and contains(text(),'Add')]");
-        List<WebElement> buttons = Hooks.driver.findElements(locator);
+        List<WebElement> buttons = getDriver().findElements(locator);
         if (!buttons.isEmpty()) {
             Assert.assertFalse("Add button is visible!", buttons.get(0).isDisplayed());
         }
@@ -225,7 +214,7 @@ public class CategoryUiSteps {
             return;
         }
         
-        List<WebElement> buttons = Hooks.driver.findElements(locator);
+        List<WebElement> buttons = getDriver().findElements(locator);
         for (WebElement btn : buttons) {
             // It passes if the button is either NOT displayed OR it IS displayed but DISABLED
             boolean isHidden = !btn.isDisplayed();
@@ -239,7 +228,7 @@ public class CategoryUiSteps {
         if (btnName.equals("Add Category")) {
             // Re-using the Add Category locator to check for visibility
             By addBtn = By.xpath("//a[contains(@class,'btn-primary') and contains(text(),'Add')]");
-            WebElement btn = wait.until(ExpectedConditions.visibilityOfElementLocated(addBtn));
+            WebElement btn = getWait().until(ExpectedConditions.visibilityOfElementLocated(addBtn));
             Assert.assertTrue("Add Category button should be visible!", btn.isDisplayed());
         }
     }
@@ -250,7 +239,7 @@ public class CategoryUiSteps {
     public void i_select_from_parent_dropdown(String parentName) {
         try {
             By dropdownLocator = By.cssSelector("select[name='parentId'], select#parentCategory");
-            WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(dropdownLocator));
+            WebElement dropdown = getWait().until(ExpectedConditions.presenceOfElementLocated(dropdownLocator));
             Select select = new Select(dropdown);
             select.selectByVisibleText(parentName);
         } catch (Exception e) {
@@ -261,8 +250,8 @@ public class CategoryUiSteps {
 
     @Then("I should see categories with parent {string}")
     public void i_should_see_categories_with_parent(String parentName) {
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), parentName));
-        List<WebElement> parentCells = Hooks.driver
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), parentName));
+        List<WebElement> parentCells = getDriver()
                 .findElements(By.xpath("//table//tr//td[contains(text(),'" + parentName + "')]"));
         Assert.assertTrue("No categories found with parent: " + parentName, parentCells.size() > 0);
     }
@@ -278,7 +267,7 @@ public class CategoryUiSteps {
     public void i_select_parent_from_dropdown(String parentName) {
         try {
             By dropdownLocator = By.cssSelector("select[name='parentId'], select#parent");
-            WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(dropdownLocator));
+            WebElement dropdown = getWait().until(ExpectedConditions.presenceOfElementLocated(dropdownLocator));
             Select select = new Select(dropdown);
             select.selectByVisibleText(parentName);
         } catch (Exception e) {
@@ -290,13 +279,13 @@ public class CategoryUiSteps {
     @Then("the category {string} should be displayed with correct details")
     public void category_displayed_with_correct_details(String catName) {
         By categoryRow = By.xpath("//tr[contains(.,'" + catName + "')]");
-        WebElement row = wait.until(ExpectedConditions.visibilityOfElementLocated(categoryRow));
+        WebElement row = getWait().until(ExpectedConditions.visibilityOfElementLocated(categoryRow));
         Assert.assertTrue("Category row not found for: " + catName, row.isDisplayed());
     }
 
     @Then("I should not see {string} in the category list")
     public void i_should_not_see_in_list(String catName) {
-        List<WebElement> elements = Hooks.driver
+        List<WebElement> elements = getDriver()
                 .findElements(By.xpath("//*[contains(text(),'" + catName + "')]"));
         Assert.assertTrue("Category '" + catName + "' should not be visible but was found",
                 elements.isEmpty() || !elements.get(0).isDisplayed());
@@ -307,11 +296,11 @@ public class CategoryUiSteps {
     @Then("I should see the {string} buttons for categories")
     public void i_should_see_buttons_for_categories(String btnName) {
         if (btnName.equals("Edit")) {
-            List<WebElement> editButtons = Hooks.driver.findElements(By.xpath("//a[@title='Edit']"));
+            List<WebElement> editButtons = getDriver().findElements(By.xpath("//a[@title='Edit']"));
             Assert.assertTrue("Edit buttons should be visible", editButtons.size() > 0);
             Assert.assertTrue("At least one Edit button should be displayed", editButtons.get(0).isDisplayed());
         } else if (btnName.equals("Delete")) {
-            List<WebElement> deleteButtons = Hooks.driver.findElements(By.xpath("//button[@title='Delete']"));
+            List<WebElement> deleteButtons = getDriver().findElements(By.xpath("//button[@title='Delete']"));
             Assert.assertTrue("Delete buttons should be visible", deleteButtons.size() > 0);
             Assert.assertTrue("At least one Delete button should be displayed", deleteButtons.get(0).isDisplayed());
         }

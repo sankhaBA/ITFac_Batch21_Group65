@@ -1,5 +1,7 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.api;
 
+import com.itfac.qa.utils.AuthenticationHelper;
+import com.itfac.qa.utils.ConfigurationManager;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -15,6 +17,9 @@ import java.util.UUID;
 
 public class PlantsApiSteps {
 
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
+    private final AuthenticationHelper authHelper = new AuthenticationHelper();
+
     private static Response response;
     private static String authToken;
 
@@ -23,22 +28,7 @@ public class PlantsApiSteps {
 
     @Given("I authenticate with username {string} and password {string} and store the token")
     public void authenticateAndStoreToken(String username, String password) {
-        Map<String, String> credentials = new HashMap<>();
-        credentials.put("username", username);
-        credentials.put("password", password);
-
-        Response loginResponse = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(credentials)
-                .when()
-                .post("/api/auth/login");
-
-        Assert.assertEquals("Login failed! Status code mismatch.", 200, loginResponse.getStatusCode());
-        
-        authToken = loginResponse.jsonPath().getString("token");
-        Assert.assertNotNull("Token not found in login response!", authToken);
-        Assert.assertFalse("Token is empty!", authToken.isEmpty());
-        
+        authToken = authHelper.authenticate(username, password);
         System.out.println("Authentication successful. Token obtained: " + authToken.substring(0, 20) + "...");
     }
 

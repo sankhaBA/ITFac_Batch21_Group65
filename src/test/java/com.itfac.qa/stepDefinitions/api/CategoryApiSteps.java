@@ -1,5 +1,7 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.api;
 
+import com.itfac.qa.utils.AuthenticationHelper;
+import com.itfac.qa.utils.ConfigurationManager;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
@@ -13,7 +15,9 @@ import java.util.Map;
 
 public class CategoryApiSteps {
 
-    private String BASE_URI = "http://localhost:8080";
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
+    private final AuthenticationHelper authHelper = new AuthenticationHelper();
+    private String BASE_URI = config.getApiBaseUrl();
     private String token;
     private Response response;
     private int currentCategoryId;
@@ -23,24 +27,12 @@ public class CategoryApiSteps {
 
     @Given("I have a valid authentication token for {string}")
     public void i_have_token(String role) {
-        String username = role.equalsIgnoreCase("admin") ? "admin" : "testuser";
-        String password = role.equalsIgnoreCase("admin") ? "admin123" : "test123";
-
-        Response authResponse = RestAssured.given()
-                .baseUri(BASE_URI)
-                .contentType(ContentType.JSON)
-                .body("{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}")
-                .post("/api/auth/login");
-
-        token = authResponse.jsonPath().getString("token");
-        Assert.assertNotNull("Token was null! Login failed for user: " + username, token);
+        authHelper.authenticateByRole(role);
+        token = authHelper.getToken();
     }
 
     private RequestSpecification givenAuthenticated() {
-        return RestAssured.given()
-                .baseUri(BASE_URI)
-                .header("Authorization", "Bearer " + token)
-                .contentType(ContentType.JSON);
+        return authHelper.getAuthenticatedRequest();
     }
 
     private String getUniqueName(String baseName) {

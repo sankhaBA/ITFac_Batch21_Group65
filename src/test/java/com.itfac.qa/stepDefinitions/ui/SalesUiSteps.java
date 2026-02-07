@@ -1,6 +1,8 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.ui;
 
 import com.itfac.qa.hooks.Hooks;
+import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.LoginHelper;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
 import org.openqa.selenium.*;
@@ -11,22 +13,21 @@ import java.time.Duration;
 import java.util.List;
 
 public class SalesUiSteps {
-    String BASE_URL = "http://localhost:8080";
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
+    String BASE_URL = config.getBaseUrl();
 
-    private WebDriver getDriver() { return Hooks.driver; }
+    private WebDriver getDriver() { 
+        return Hooks.getDriver(); 
+    }
 
     @Given("I navigate to the login page")
     public void i_navigate_to_login() {
-        getDriver().get(BASE_URL + "/ui/login");
+        LoginHelper.navigateToLoginPage();
     }
 
     @Given("I login as {string} via UI")
     public void i_login_as_ui(String role) {
-        String username = role.equalsIgnoreCase("Admin") ? "admin" : "testuser";
-        String password = role.equalsIgnoreCase("Admin") ? "admin123" : "test123";
-        getDriver().findElement(By.name("username")).sendKeys(username);
-        getDriver().findElement(By.name("password")).sendKeys(password);
-        getDriver().findElement(By.cssSelector("button[type='submit']")).click();
+        LoginHelper.loginByRole(role);
     }
 
     @When("I click the {string} link in the navigation")

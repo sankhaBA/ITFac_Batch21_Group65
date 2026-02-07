@@ -1,6 +1,8 @@
-package com.itfac.qa.steps;
+package com.itfac.qa.stepDefinitions.ui;
 
 import com.itfac.qa.hooks.Hooks;
+import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.LoginHelper;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,54 +18,46 @@ import java.util.UUID;
 
 public class PlantsUiSteps {
 
-    WebDriver driver = Hooks.driver;
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    private static final ConfigurationManager config = ConfigurationManager.getInstance();
     private String lastSelectedPlantName;
     private String lastSelectedCategoryName;
     private String lastSearchTerm;
 
+    private WebDriver getDriver() {
+        return Hooks.getDriver();
+    }
+
+    private WebDriverWait getWait() {
+        return new WebDriverWait(getDriver(), Duration.ofSeconds(config.getExplicitWait()));
+    }
+
     @Given("I login as {string} with password {string}")
     public void loginAs(String username, String password) {
-        // Login using existing AuthUiSteps logic
-        if (username != null && !username.isEmpty()) {
-            WebElement userField = driver.findElement(By.name("username"));
-            userField.clear();
-            userField.sendKeys(username);
-        }
-        
-        if (password != null && !password.isEmpty()) {
-            WebElement passField = driver.findElement(By.name("password"));
-            passField.clear();
-            passField.sendKeys(password);
-        }
-        
-        driver.findElement(By.cssSelector("button[type='submit']")).click();
-        
-        wait.until(ExpectedConditions.urlContains("dashboard"));
+        LoginHelper.login(username, password);
     }
 
     @Given("I navigate to the Plants page")
     public void navigateToPlantsPage() {
         // Click on Plants navigation item
-        WebElement plantsNavItem = wait.until(
+        WebElement plantsNavItem = getWait().until(
             ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(), 'Plants') or contains(@href, '/plants')]"))
         );
         plantsNavItem.click();
         
         // Wait for Plants page to load
-        wait.until(ExpectedConditions.urlContains("plants"));
+        getWait().until(ExpectedConditions.urlContains("plants"));
         System.out.println("Navigated to Plants page");
     }
 
     @When("I click the Add Plant button")
     public void clickAddPlantButton() {
         try {
-            System.out.println("Current URL: " + driver.getCurrentUrl());
+            System.out.println("Current URL: " + getDriver().getCurrentUrl());
             System.out.println("Looking for Add Plant button...");
             
             WebElement button = null;
             try {
-                button = wait.until(
+                button = getWait().until(
                     ExpectedConditions.elementToBeClickable(
                         By.xpath("//button[contains(text(), 'Add a Plant')] | //a[contains(text(), 'Add a Plant')]")
                     )
@@ -71,10 +65,10 @@ public class PlantsUiSteps {
             } catch (Exception e1) {
                 System.out.println("Button not found with text 'Add a Plant', trying alternative locators...");
                 try {
-                    button = driver.findElement(By.xpath("//button[contains(text(), 'Add')] | //a[contains(text(), 'Add')]"));
+                    button = getDriver().findElement(By.xpath("//button[contains(text(), 'Add')] | //a[contains(text(), 'Add')]"));
                 } catch (Exception e2) {
                     System.out.println("Button not found, navigating directly to URL...");
-                    driver.get("http://localhost:8080/ui/plants/add");
+                    getDriver().get(config.getUiBaseUrl() + "/plants/add");
                     return;
                 }
             }
@@ -86,7 +80,7 @@ public class PlantsUiSteps {
         } catch (Exception e) {
             System.out.println("Error occurred: " + e.getMessage());
             System.out.println("Navigating directly to Add Plant page...");
-            driver.get("http://localhost:8080/ui/plants/add");
+            getDriver().get(config.getUiBaseUrl() + "/plants/add");
         }
     }
 
@@ -99,14 +93,14 @@ public class PlantsUiSteps {
             urlSegment = "plants/edit";
         } else if (pageName.equalsIgnoreCase("Plants")) {
             // Ensure we are on the list page, not add/edit.
-            wait.until(d -> {
+            getWait().until(d -> {
                 String url = d.getCurrentUrl();
                 return url != null
                         && url.contains("/ui/plants")
                         && !url.contains("/ui/plants/add")
                         && !url.contains("/ui/plants/edit");
             });
-            String currentUrl = driver.getCurrentUrl();
+            String currentUrl = getDriver().getCurrentUrl();
             Assert.assertTrue("Not on Plants list page! Current URL: " + currentUrl,
                     currentUrl.contains("/ui/plants")
                             && !currentUrl.contains("/ui/plants/add")
@@ -117,9 +111,9 @@ public class PlantsUiSteps {
             urlSegment = pageName.toLowerCase().replace(" ", "-");
         }
         
-        wait.until(ExpectedConditions.urlContains(urlSegment));
+        getWait().until(ExpectedConditions.urlContains(urlSegment));
         
-        String currentUrl = driver.getCurrentUrl();
+        String currentUrl = getDriver().getCurrentUrl();
         Assert.assertTrue("Not on " + pageName + " page! Current URL: " + currentUrl, 
                          currentUrl.contains(urlSegment));
         System.out.println("Successfully navigated to: " + pageName);
@@ -129,17 +123,17 @@ public class PlantsUiSteps {
     public void navigateToAddPlantPage() {
         try {
             clickAddPlantButton();
-            wait.until(ExpectedConditions.urlContains("plants/add"));
+            getWait().until(ExpectedConditions.urlContains("plants/add"));
         } catch (Exception e) {
             System.out.println("Could not click button, navigating directly to Add Plant page...");
-            driver.get("http://localhost:8080/ui/plants/add");
-            wait.until(ExpectedConditions.urlContains("plants/add"));
+            getDriver().get(config.getUiBaseUrl() + "/plants/add");
+            getWait().until(ExpectedConditions.urlContains("plants/add"));
         }
     }
 
     @When("I click the Save button without entering any data")
     public void clickSaveButtonWithoutData() {
-        WebElement button = wait.until(
+        WebElement button = getWait().until(
             ExpectedConditions.elementToBeClickable(
                 By.xpath("//button[contains(text(), 'Save')]")
             )
@@ -150,15 +144,15 @@ public class PlantsUiSteps {
 
     @Then("I should see validation error {string} in red")
     public void verifyValidationError(String errorMessage) {
-        wait.until(d -> d.getPageSource() != null && !d.getPageSource().isEmpty());
-        boolean errorPresent = containsTextLoosely(driver.getPageSource(), errorMessage);
+        getWait().until(d -> d.getPageSource() != null && !d.getPageSource().isEmpty());
+        boolean errorPresent = containsTextLoosely(getDriver().getPageSource(), errorMessage);
         Assert.assertTrue("Validation error '" + errorMessage + "' not found!", errorPresent);
         System.out.println("Validation error found: " + errorMessage);
     }
 
     @When("I enter {string} into the Plant Name field")
     public void enterPlantName(String plantName) {
-        WebElement field = wait.until(
+        WebElement field = getWait().until(
             ExpectedConditions.presenceOfElementLocated(By.name("name"))
         );
         field.clear();
@@ -168,13 +162,13 @@ public class PlantsUiSteps {
 
     @When("I select a category")
     public void selectCategory() {
-        WebElement categoryDropdown = wait.until(
+        WebElement categoryDropdown = getWait().until(
             ExpectedConditions.elementToBeClickable(By.name("categoryId"))
         );
         categoryDropdown.click();
         
         // Select the first available option (not the placeholder)
-        WebElement firstOption = wait.until(
+        WebElement firstOption = getWait().until(
             ExpectedConditions.elementToBeClickable(By.xpath("//select[@name='categoryId']/option[not(@value='') and not(@disabled)][1]"))
         );
         firstOption.click();
@@ -183,7 +177,7 @@ public class PlantsUiSteps {
 
     @When("I enter {string} into the Price field")
     public void enterPrice(String price) {
-        WebElement field = wait.until(
+        WebElement field = getWait().until(
             ExpectedConditions.presenceOfElementLocated(By.name("price"))
         );
         field.clear();
@@ -193,7 +187,7 @@ public class PlantsUiSteps {
 
     @When("I enter {string} into the Quantity field")
     public void enterQuantity(String quantity) {
-        WebElement field = wait.until(
+        WebElement field = getWait().until(
             ExpectedConditions.presenceOfElementLocated(By.name("quantity"))
         );
         field.clear();
@@ -203,7 +197,7 @@ public class PlantsUiSteps {
 
     @When("I click the Save button")
     public void clickSaveButton() {
-        WebElement button = wait.until(
+        WebElement button = getWait().until(
             ExpectedConditions.elementToBeClickable(
                 By.xpath("//button[contains(text(), 'Save')]")
             )
@@ -214,14 +208,14 @@ public class PlantsUiSteps {
 
     @Then("I should not see validation error {string}")
     public void verifyNoValidationError(String errorMessage) {
-        boolean errorPresent = driver.getPageSource().contains(errorMessage);
+        boolean errorPresent = getDriver().getPageSource().contains(errorMessage);
         Assert.assertFalse("Validation error '" + errorMessage + "' should not be present but was found!", errorPresent);
         System.out.println("Validation error correctly not present: " + errorMessage);
     }
 
     @When("I click the Cancel button")
     public void clickCancelButton() {
-        WebElement button = wait.until(
+        WebElement button = getWait().until(
             ExpectedConditions.elementToBeClickable(
                 By.xpath("//button[contains(text(), 'Cancel')] | //a[contains(text(), 'Cancel')]")
             )
@@ -232,7 +226,7 @@ public class PlantsUiSteps {
 
     @Then("I should see alert {string}")
     public void verifyAlert(String alertMessage) {
-        WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait alertWait = new WebDriverWait(getDriver(), Duration.ofSeconds(15));
         alertWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".alert")));
         alertWait.until(d -> {
             List<WebElement> alerts = d.findElements(By.cssSelector(".alert"));
@@ -245,7 +239,7 @@ public class PlantsUiSteps {
             return false;
         });
         boolean alertPresent = false;
-        for (WebElement a : driver.findElements(By.cssSelector(".alert"))) {
+        for (WebElement a : getDriver().findElements(By.cssSelector(".alert"))) {
             if (containsTextLoosely(a.getText(), alertMessage)) {
                 alertPresent = true;
                 break;
@@ -270,9 +264,9 @@ public class PlantsUiSteps {
 
     @Then("I should see plant {string} in the table")
     public void verifyPlantInTable(String plantName) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
-        wait.until(d -> containsTextLoosely(d.getPageSource(), plantName));
-        boolean plantPresent = containsTextLoosely(driver.getPageSource(), plantName);
+        getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
+        getWait().until(d -> containsTextLoosely(d.getPageSource(), plantName));
+        boolean plantPresent = containsTextLoosely(getDriver().getPageSource(), plantName);
         Assert.assertTrue("Plant '" + plantName + "' not found in table!", plantPresent);
         System.out.println("Plant found in table: " + plantName);
     }
@@ -284,19 +278,19 @@ public class PlantsUiSteps {
         WebElement deleteButton = findActionButton(row, "Delete");
         deleteButton.click();
         acceptConfirmIfPresent();
-        wait.until(ExpectedConditions.stalenessOf(row));
+        getWait().until(ExpectedConditions.stalenessOf(row));
         System.out.println("Clicked Delete for plant: " + lastSelectedPlantName);
     }
 
     @Then("the plant record should be removed from the table")
     public void verifyPlantRemovedFromTable() {
         Assert.assertNotNull("No plant was selected for delete!", lastSelectedPlantName);
-        WebDriverWait deleteWait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait deleteWait = new WebDriverWait(getDriver(), Duration.ofSeconds(15));
         deleteWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
         deleteWait.until(d -> !containsTextLoosely(d.getPageSource(), lastSelectedPlantName));
         Assert.assertFalse(
             "Plant '" + lastSelectedPlantName + "' still present after delete!",
-            containsTextLoosely(driver.getPageSource(), lastSelectedPlantName)
+            containsTextLoosely(getDriver().getPageSource(), lastSelectedPlantName)
         );
     }
 
@@ -306,19 +300,19 @@ public class PlantsUiSteps {
         lastSelectedPlantName = getRowPlantName(row);
         WebElement editButton = findActionButton(row, "Edit");
         editButton.click();
-        wait.until(ExpectedConditions.urlContains("plants"));
+        getWait().until(ExpectedConditions.urlContains("plants"));
         System.out.println("Clicked Edit for plant: " + lastSelectedPlantName);
     }
 
     @Then("the plant details should be loaded in the form")
     public void verifyPlantDetailsLoaded() {
-        WebElement nameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("name")));
+        WebElement nameField = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("name")));
         String nameValue = nameField.getAttribute("value");
         Assert.assertNotNull("Plant name value is missing on edit form!", nameValue);
         Assert.assertFalse("Plant name value is empty on edit form!", nameValue.trim().isEmpty());
 
-        WebElement priceField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("price")));
-        WebElement quantityField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("quantity")));
+        WebElement priceField = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("price")));
+        WebElement quantityField = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("quantity")));
         Assert.assertFalse("Price value is empty on edit form!",
                 priceField.getAttribute("value").trim().isEmpty());
         Assert.assertFalse("Quantity value is empty on edit form!",
@@ -328,28 +322,28 @@ public class PlantsUiSteps {
     @Given("I am on the Edit Plant page")
     public void navigateToEditPlantPage() {
         clickEditButtonForFirstPlant();
-        wait.until(ExpectedConditions.urlContains("plants"));
+        getWait().until(ExpectedConditions.urlContains("plants"));
         verifyNavigationToPage("Edit Plant");
     }
 
     @When("I clear the Plant Name field")
     public void clearPlantNameField() {
-        WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("name")));
+        WebElement field = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("name")));
         field.clear();
         System.out.println("Cleared Plant Name field");
     }
 
     @When("I clear all plant input fields")
     public void clearAllPlantInputFields() {
-        WebElement nameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("name")));
-        WebElement priceField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("price")));
-        WebElement quantityField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("quantity")));
+        WebElement nameField = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("name")));
+        WebElement priceField = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("price")));
+        WebElement quantityField = getWait().until(ExpectedConditions.presenceOfElementLocated(By.name("quantity")));
 
         nameField.clear();
         priceField.clear();
         quantityField.clear();
 
-        WebElement categoryDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.name("categoryId")));
+        WebElement categoryDropdown = getWait().until(ExpectedConditions.elementToBeClickable(By.name("categoryId")));
         Select select = new Select(categoryDropdown);
         if (!select.getOptions().isEmpty()) {
             select.selectByIndex(0);
@@ -392,18 +386,18 @@ public class PlantsUiSteps {
     public void verifySearchedPlantInTable() {
         Assert.assertNotNull("No search term captured!", lastSearchTerm);
         Assert.assertTrue("Searched plant '" + lastSearchTerm + "' not found in table!",
-                driver.getPageSource().contains(lastSearchTerm));
+                getDriver().getPageSource().contains(lastSearchTerm));
     }
 
     @Then("I should see {string} in the table")
     public void verifyTableMessage(String message) {
-        boolean messagePresent = driver.getPageSource().contains(message);
+        boolean messagePresent = getDriver().getPageSource().contains(message);
         Assert.assertTrue("Message '" + message + "' not found in table!", messagePresent);
     }
 
     @When("I filter plants by a category")
     public void filterPlantsByCategory() {
-        WebElement categoryDropdown = wait.until(
+        WebElement categoryDropdown = getWait().until(
                 ExpectedConditions.elementToBeClickable(By.xpath("//select[contains(@name,'category') or contains(@id,'category')]"))
         );
         Select select = new Select(categoryDropdown);
@@ -427,13 +421,13 @@ public class PlantsUiSteps {
     @Then("I should see plants filtered by the selected category")
     public void verifyPlantsFilteredByCategory() {
         Assert.assertNotNull("No category was selected for filtering!", lastSelectedCategoryName);
-        boolean categoryPresent = driver.getPageSource().contains(lastSelectedCategoryName);
+        boolean categoryPresent = getDriver().getPageSource().contains(lastSelectedCategoryName);
         Assert.assertTrue("Filtered plants do not show selected category!", categoryPresent);
     }
 
     @When("I click the {string} column header")
     public void clickColumnHeader(String columnName) {
-        WebElement headerLink = wait.until(
+        WebElement headerLink = getWait().until(
             ExpectedConditions.elementToBeClickable(By.xpath("//th//a[contains(normalize-space(.), '" + columnName + "')]"))
         );
         headerLink.click();
@@ -453,16 +447,16 @@ public class PlantsUiSteps {
             expectedSortField = columnName.toLowerCase();
         }
 
-        wait.until(driver -> driver.getCurrentUrl().contains("sortField=" + expectedSortField));
+        getWait().until(driver -> getDriver().getCurrentUrl().contains("sortField=" + expectedSortField));
         Assert.assertTrue("URL does not contain expected sortField for column: " + columnName,
-                driver.getCurrentUrl().contains("sortField=" + expectedSortField));
+                getDriver().getCurrentUrl().contains("sortField=" + expectedSortField));
 
-        boolean arrowPresent = driver.getPageSource().contains("↑") || driver.getPageSource().contains("↓");
+        boolean arrowPresent = getDriver().getPageSource().contains("↑") || getDriver().getPageSource().contains("↓");
         Assert.assertTrue("Sort direction indicator not found after sorting!", arrowPresent);
     }
 
     private WebElement getFirstPlantRow() {
-        WebElement table = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
+        WebElement table = getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
         List<WebElement> rows = table.findElements(By.xpath(".//tbody/tr"));
         for (WebElement row : rows) {
             String rowText = row.getText();
@@ -483,7 +477,7 @@ public class PlantsUiSteps {
     }
 
     private WebElement findRowByPlantName(String plantName) {
-        WebElement table = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
+        WebElement table = getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
         List<WebElement> rows = table.findElements(By.xpath(".//tbody/tr"));
         for (WebElement row : rows) {
             if (row.getText().contains(plantName)) {
@@ -525,8 +519,8 @@ public class PlantsUiSteps {
 
     private void acceptConfirmIfPresent() {
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.alertIsPresent());
-            driver.switchTo().alert().accept();
+            new WebDriverWait(getDriver(), Duration.ofSeconds(5)).until(ExpectedConditions.alertIsPresent());
+            getDriver().switchTo().alert().accept();
         } catch (Exception ignored) {
             // No confirm dialog present
         }
@@ -566,13 +560,13 @@ public class PlantsUiSteps {
     }
 
     private WebElement findSearchInput() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+        return getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath(
                 "//input[contains(@placeholder,'Search') or contains(@aria-label,'Search') or contains(@name,'search') or contains(@id,'search')]"
         )));
     }
 
     private WebElement findSearchButton() {
-        List<WebElement> buttons = driver.findElements(By.xpath("//button[contains(normalize-space(.), 'Search')]"));
+        List<WebElement> buttons = getDriver().findElements(By.xpath("//button[contains(normalize-space(.), 'Search')]"));
         return buttons.isEmpty() ? null : buttons.get(0);
     }
 }
