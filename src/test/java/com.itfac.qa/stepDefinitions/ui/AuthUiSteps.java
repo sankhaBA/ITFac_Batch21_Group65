@@ -83,17 +83,6 @@ public class AuthUiSteps {
         verifyRedirect();
     }
 
-    @When("I click the {string} button")
-    public void clickLogout(String btnName) {
-        // For Logout link: use href attribute since text is split by icon element
-        if (btnName.equalsIgnoreCase("Logout")) {
-            driver.findElement(By.xpath("//a[@href='/ui/logout']")).click();
-        } else {
-            // Fallback for other buttons: use contains on all descendant text
-            driver.findElement(By.xpath("//*[contains(., '" + btnName + "')]")).click();
-        }
-    }
-
     @Then("I should be redirected to the Login page")
     public void verifyLoginRedirect() {
         wait.until(ExpectedConditions.urlContains("login"));
