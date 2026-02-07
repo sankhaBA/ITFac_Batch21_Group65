@@ -16,6 +16,7 @@ import java.time.Duration;
 /**
  * Cucumber Hooks for test setup and teardown.
  * Uses ThreadLocal pattern for WebDriver to support parallel test execution.
+ * Note: Database seeding is now handled at the session level in TestRunner.
  */
 public class Hooks {
 
@@ -34,7 +35,7 @@ public class Hooks {
      * Set up WebDriver before each UI test scenario.
      * Creates browser instance based on configuration.
      */
-    @Before("@UI") 
+    @Before(value = "@UI") 
     public void setup() {
         WebDriver webDriver = createDriver();
         driver.set(webDriver);
@@ -48,7 +49,7 @@ public class Hooks {
     /**
      * Clean up WebDriver after each UI test scenario.
      */
-    @After("@UI")
+    @After(value = "@UI")
     public void tearDown() {
         WebDriver webDriver = driver.get();
         if (webDriver != null) {

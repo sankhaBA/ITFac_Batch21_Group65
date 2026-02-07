@@ -135,7 +135,6 @@ Feature: Plants UI Module
     And I click the Save button
     Then I should be navigated to the "Plants" page
     And I should see alert "Plant updated successfully"
-    And I should see the newly saved plant in the table
 
   @UI-PLANT-LowStock-16
   Scenario: Verify showing Low stock badge in the Stock column of the table

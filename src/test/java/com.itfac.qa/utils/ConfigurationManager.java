@@ -1,5 +1,6 @@
 package com.itfac.qa.utils;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +14,12 @@ public class ConfigurationManager {
 
     private static ConfigurationManager instance;
     private Properties properties;
+    private Dotenv dotenv;
     private static final String CONFIG_FILE = "src/test/resources/config/test.properties";
 
     private ConfigurationManager() {
         properties = new Properties();
+        loadEnvironmentVariables();
         loadProperties();
     }
 
@@ -32,6 +35,23 @@ public class ConfigurationManager {
             }
         }
         return instance;
+    }
+
+    /**
+     * Load environment variables from .env file if it exists
+     */
+    private void loadEnvironmentVariables() {
+        try {
+            // Load .env file from project root
+            dotenv = Dotenv.configure()
+                    .directory(".")
+                    .ignoreIfMissing()
+                    .load();
+            System.out.println("Environment variables loaded from .env file");
+        } catch (Exception e) {
+            System.out.println("No .env file found or error loading it. Using system environment variables.");
+            dotenv = null;
+        }
     }
 
     /**
@@ -67,16 +87,47 @@ public class ConfigurationManager {
 
     /**
      * Get property value by key
+     * First checks environment variables, then falls back to properties file
      */
     public String getProperty(String key) {
+        // Check environment variables first (for sensitive data)
+        String envValue = getEnvironmentVariable(key);
+        if (envValue != null) {
+            return envValue;
+        }
+        // Fall back to properties file
         return properties.getProperty(key);
     }
 
     /**
+     * Get environment variable with key mapping
+     * Converts property keys to environment variable format
+     * First checks .env file, then system environment variables
+     */
+    private String getEnvironmentVariable(String key) {
+        // Convert property key to environment variable format
+        // e.g., "db.url" -> "DB_URL"
+        String envKey = key.toUpperCase().replace('.', '_');
+        
+        // Check .env file first
+        if (dotenv != null) {
+            String dotenvValue = dotenv.get(envKey);
+            if (dotenvValue != null) {
+                return dotenvValue;
+            }
+        }
+        
+        // Fall back to system environment variables
+        return System.getenv(envKey);
+    }
+
+    /**
      * Get property value with default fallback
+     * First checks environment variables, then properties file, then default
      */
     public String getProperty(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+        String value = getProperty(key);
+        return value != null ? value : defaultValue;
     }
 
     // URL Configuration
@@ -139,5 +190,26 @@ public class ConfigurationManager {
     // Browser Configuration
     public String getBrowser() {
         return getProperty("browser", "chrome");
+    }
+
+    // Database Configuration
+    public String getDatabaseUrl() {
+        return getProperty("db.url");
+    }
+
+    public String getDatabaseUsername() {
+        return getProperty("db.username");
+    }
+
+    public String getDatabasePassword() {
+        return getProperty("db.password");
+    }
+
+    public String getDatabaseDriver() {
+        return getProperty("db.driver");
+    }
+
+    public boolean isDatabaseSeedingEnabled() {
+        return Boolean.parseBoolean(getProperty("db.seed.enabled", "true"));
     }
 }

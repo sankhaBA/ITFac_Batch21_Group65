@@ -53,6 +53,21 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- MySQL Database Driver -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Dotenv for loading environment variables from .env file -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

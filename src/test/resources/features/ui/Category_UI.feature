@@ -93,18 +93,18 @@ Feature: Category Management UI
   @Regression
   @UI-CAT-SearchParent-09
   Scenario: Verify search by parent category only
-    When I select "Roses" from the parent category dropdown
+    When I select "Flowers" from the parent category dropdown
     And I click the search button
-    Then I should see categories with parent "Roses"
+    Then I should see categories with parent "Flowers"
 
   @Regression
   @UI-CAT-SearchBoth-10
   Scenario: Verify search by both parent and sub-category
-    When I select "Roses" from the parent category dropdown
-    And I enter "Red" in the search box
+    When I select "Flowers" from the parent category dropdown
+    And I enter "Roses" in the search box
     And I click the search button
-    Then I should see "Red" in the category list
-    And the displayed categories should have parent "Roses"
+    Then I should see "Roses" in the category list
+    And the displayed categories should have parent "Flowers"
 
   # ========== Additional Creation Tests ==========
 
@@ -112,7 +112,7 @@ Feature: Category Management UI
   Scenario: Verify Admin can create category with parent selected
     When I click the "Add Category" button
     And I enter "ChildCat" in the category name field
-    And I select "Roses" from the parent dropdown
+    And I select "Flowers" from the parent dropdown
     And I click the "Save" button
     Then I should see a success message "Category created successfully"
     And I should see "ChildCat" in the category list
