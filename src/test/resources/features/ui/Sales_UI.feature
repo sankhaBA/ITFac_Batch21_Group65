@@ -22,7 +22,7 @@ Feature: Sales Management UI Automation
     Given I navigate to the login page
     And I login as "Admin" via UI
     And I navigate to the sales "Sell Plant" page
-    When I select "Fern" from the plant dropdown
+    When I select "Basil Plant" from the plant dropdown
     And I enter quantity "1"
     And I click the sales "Submit" button
     Then I should be redirected to the Sales List

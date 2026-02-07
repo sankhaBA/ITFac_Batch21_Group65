@@ -1,7 +1,9 @@
 package com.itfac.qa.stepDefinitions.api;
 
+import com.itfac.qa.runners.TestRunner;
 import com.itfac.qa.utils.AuthenticationHelper;
 import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.TestDataSeeder;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
@@ -24,6 +26,26 @@ public class CategoryApiSteps {
     private int targetParentId;
     private String targetParentName;
     private String generatedName;
+
+    // Helper method to get category ID by name from database
+    private Long getCategoryIdByName(String categoryName) {
+        Response response = givenAuthenticated().get("/api/categories?name=" + categoryName);
+        if (response.getStatusCode() == 200) {
+            List<Map<String, Object>> categories = response.jsonPath().getList("$");
+            for (Map<String, Object> cat : categories) {
+                String name = (String) cat.get("name");
+                if (categoryName.equals(name)) {
+                    Object idObj = cat.get("id");
+                    if (idObj instanceof Integer) {
+                        return ((Integer) idObj).longValue();
+                    } else if (idObj instanceof Long) {
+                        return (Long) idObj;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     @Given("I have a valid authentication token for {string}")
     public void i_have_token(String role) {
@@ -304,6 +326,37 @@ public class CategoryApiSteps {
     @When("I send a DELETE request to {string}")
     public void i_send_delete_to_endpoint(String endpoint) {
         response = givenAuthenticated().delete(endpoint);
+        AuthApiSteps.setSharedResponse(response);
+    }
+
+    @When("I send a GET request to categories filtered by parent named {string}")
+    public void i_send_get_filtered_by_parent_name(String parentName) {
+        Long parentId = getCategoryIdByName(parentName);
+        Assert.assertNotNull("Parent category '" + parentName + "' not found", parentId);
+        targetParentId = parentId.intValue();
+        targetParentName = parentName;
+        response = givenAuthenticated().get("/api/categories?parentId=" + parentId);
+        AuthApiSteps.setSharedResponse(response);
+    }
+
+    @When("I send a GET request with name {string} and parent named {string}")
+    public void i_send_get_with_name_and_parent_name(String nameFilter, String parentName) {
+        Long parentId = getCategoryIdByName(parentName);
+        Assert.assertNotNull("Parent category '" + parentName + "' not found", parentId);
+        targetParentId = parentId.intValue();
+        targetParentName = parentName;
+        response = givenAuthenticated()
+                .get("/api/categories?name=" + nameFilter + "&parentId=" + parentId);
+        AuthApiSteps.setSharedResponse(response);
+    }
+
+    @When("I send a GET request for seeded category {string} by ID")
+    public void i_send_get_for_seeded_category_by_id(String categoryName) {
+        Long categoryId = getCategoryIdByName(categoryName);
+        Assert.assertNotNull("Category '" + categoryName + "' not found in seeded data", categoryId);
+        currentCategoryId = categoryId.intValue();
+        generatedName = categoryName;
+        response = givenAuthenticated().get("/api/categories/" + categoryId);
         AuthApiSteps.setSharedResponse(response);
     }
 }

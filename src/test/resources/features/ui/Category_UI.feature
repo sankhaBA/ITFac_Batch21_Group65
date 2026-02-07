@@ -75,7 +75,7 @@ Feature: Category Management UI
 
     Examples:
       | SearchTerm | ExpectedResult    |
-      | Anthurium  | Anthurium         |
+      | Flowers    | Flowers           |
       | InvalidCat | No category found |
 
   @UI-CAT-RBAC-08
@@ -112,7 +112,7 @@ Feature: Category Management UI
   Scenario: Verify Admin can create category with parent selected
     When I click the "Add Category" button
     And I enter "ChildCat" in the category name field
-    And I select "Flowers" from the parent dropdown
+    And I select "Trees" from the parent dropdown
     And I click the "Save" button
     Then I should see a success message "Category created successfully"
     And I should see "ChildCat" in the category list

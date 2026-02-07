@@ -1,8 +1,10 @@
 package com.itfac.qa.stepDefinitions.api;
 
 import com.itfac.qa.hooks.Hooks;
+import com.itfac.qa.runners.TestRunner;
 import com.itfac.qa.utils.AuthenticationHelper;
 import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.TestDataSeeder;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -20,6 +22,18 @@ public class SalesApiSteps {
     private RequestSpecification request;
     private String jwtToken;
     private static String lastCreatedSaleId; // Static to share across steps in same scenario
+
+    // Helper method to get first seeded plant ID
+    private Long getFirstSeededPlantId() {
+        TestDataSeeder seeder = TestRunner.getDataSeeder();
+        if (seeder != null) {
+            List<Long> plantIds = seeder.getSeededIds("plants");
+            if (!plantIds.isEmpty()) {
+                return plantIds.get(0);
+            }
+        }
+        return null;
+    }
 
     @Given("the application is running")
     public void the_application_is_running() {
@@ -39,6 +53,18 @@ public class SalesApiSteps {
 
     @When("I request to sell plant ID {string} with quantity {string}")
     public void i_request_to_sell_plant(String plantId, String quantity) {
+        response = request.queryParam("quantity", quantity).post("/api/sales/plant/" + plantId);
+
+        // Capture ID if created successfully
+        if (response.getStatusCode() == 201) {
+            lastCreatedSaleId = response.jsonPath().getString("id");
+        }
+    }
+
+    @When("I request to sell the first seeded plant with quantity {string}")
+    public void i_request_to_sell_first_seeded_plant(String quantity) {
+        Long plantId = getFirstSeededPlantId();
+        Assert.assertNotNull("No seeded plants found!", plantId);
         response = request.queryParam("quantity", quantity).post("/api/sales/plant/" + plantId);
 
         // Capture ID if created successfully

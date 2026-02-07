@@ -8,7 +8,7 @@ Feature: Plants API Module
   @API-PLANT-GetById-01
   Scenario: Verify Get Plant by ID – Success
     Given I authenticate with username "admin" and password "admin123" and store the token
-    When I send a GET request to "/api/plants/1" with the stored token
+    When I send a GET request to get the first seeded plant by ID
     Then the response status code should be 200
     And the response should contain plant details with field "id"
     And the response should contain plant details with field "name"
@@ -37,21 +37,7 @@ Feature: Plants API Module
   @API-PLANT-PutSuccess-04
   Scenario: Verify Update Plant Success
     Given I authenticate with username "admin" and password "admin123" and store the token
-    When I send a PUT request to "/api/plants/1" with the stored token and payload:
-      """
-      {
-        "id": 1,
-        "name": "Anthurium",
-        "price": 150,
-        "quantity": 25,
-        "category": {
-          "id": 1,
-          "name": "Anthurium",
-          "parent": "string",
-          "subCategories": ["string"]
-        }
-      }
-      """
+    When I send a PUT request to update the first seeded plant with name "Updated Rose" price 150 and quantity 25
     Then the response status code should be 200
     And the response should contain plant details with field "id"
     And the response should contain plant details with field "name"
@@ -73,13 +59,13 @@ Feature: Plants API Module
     Examples:
       | username | password | endpoint        | statusCode | payload                                                                                                                                      | Test Case ID          |
       | admin    | admin123 | /api/plants/1000| 400        | {"id": 1000}                                                                                                                                 | API-PLANTS-Update-02  |
-      | testuser | test123  | /api/plants/1   | 403        | {"id": 1, "name": "Anthurium", "price": 150, "quantity": 25, "category": {"id": 1, "name": "Anthurium", "parent": "string", "subCategories": ["string"]}} | API-PLANTS-Update-03  |
-      | admin    | admin123 | /api/plants/1   | 500        | {"id": 1, "name": "Anthurium", "price": 150, "quantity": 25, "category": "invalid_category_string"}                                          | API-PLANTS-Update-04  |
+      | testuser | test123  | /api/plants/FIRST_SEEDED_PLANT_ID   | 403        | USE_FIRST_SEEDED_PLANT_DATA | API-PLANTS-Update-03  |
+      | admin    | admin123 | /api/plants/FIRST_SEEDED_PLANT_ID   | 500        | USE_INVALID_CATEGORY_PAYLOAD                                          | API-PLANTS-Update-04  |
 
   @API-PLANT-DeleteSuccess-06
   Scenario: Verify Delete Plant by ID Success
     Given I authenticate with username "admin" and password "admin123" and store the token
-    When I send a DELETE request to "/api/plants/1" with the stored token
+    When I send a DELETE request to delete the last seeded plant by ID
     Then the response status code should be 204
 
   @API-PLANT-DeleteFail-07
@@ -92,12 +78,12 @@ Feature: Plants API Module
     Examples:
       | username | password | endpoint        | statusCode | Test Case ID          |
       | admin    | admin123 | /api/plants/abc | 400        | API-PLANTS-Delete-02  |
-      | testuser | test123  | /api/plants/1   | 403        | API-PLANTS-Delete-04  |
-      | admin    | admin123 | /api/plants/999 | 404        | API-PLANTS-Delete-05  |
+      | testuser | test123  | /api/plants/FIRST_SEEDED_PLANT_ID   | 403        | API-PLANTS-Delete-04  |
+      | admin    | admin123 | /api/plants/999999 | 404        | API-PLANTS-Delete-05  |
 
   @API-PLANT-DeleteUnauth-08
   Scenario: Verify Delete Plant by ID Unauthorized
-    When I send a DELETE request to "/api/plants/1" without authentication
+    When I send a DELETE request to delete first seeded plant without authentication
     Then the response status code should be 401
     And the response should contain error field "status" with value 401
     And the response should contain error field "error" with value "UNAUTHORIZED"
@@ -126,13 +112,13 @@ Feature: Plants API Module
   @API-PLANT-GetCatEmpty-11
   Scenario: Verify Get Plants by Category Not Found Returns Empty List
     Given I authenticate with username "admin" and password "admin123" and store the token
-    When I send a GET request to "/api/plants/category/999" with the stored token
+    When I send a GET request to "/api/plants/category/999999" with the stored token
     Then the response status code should be 200
     And the response should be an empty JSON array
 
   @API-PLANT-GetCatUnauth-12
   Scenario: Verify Get Plants by Category Unauthorized
-    When I send a GET request to "/api/plants/category/1" without authentication
+    When I send a GET request to get plants by first seeded category without authentication
     Then the response status code should be 401
     And the response should contain error field "status" with value 401
     And the response should contain error field "error" with value "UNAUTHORIZED"
@@ -171,16 +157,16 @@ Feature: Plants API Module
   @API-PLANT-CreateNotFound-16
   Scenario: Verify Create Plant Category Not Found
     Given I authenticate with username "admin" and password "admin123" and store the token
-    When I send a POST request to "/api/plants/category/999" with the stored token and payload:
+    When I send a POST request to "/api/plants/category/999999" with the stored token and payload:
       """
       {
         "id": 0,
-        "name": "NF_Anthurium",
+        "name": "NonExistentPlant",
         "price": 10,
         "quantity": 1,
         "category": {
-          "id": 999,
-          "name": "Cat999",
+          "id": 999999,
+          "name": "NonExistentCategory",
           "subCategories": []
         }
       }

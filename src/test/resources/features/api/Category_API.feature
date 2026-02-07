@@ -71,30 +71,23 @@ Feature: Category Management API
 
   @API-CAT-GetByName-09
   Scenario: Verify GET categories filtered by name
-    Given a category exists with name "Floral"
-    When I send a GET request to "/api/categories?name=Floral"
+    When I send a GET request to "/api/categories?name=Flowers"
     Then the response status code should be 200
-    And the response should contain category with name containing "Floral"
+    And the response should contain category with name containing "Flowers"
 
   @API-CAT-GetByParent-10
   Scenario: Verify GET categories filtered by parentId
     Given I have a valid authentication token for "admin"
-    And a parent category exists with name "MainCat"
-    And a category exists with name "SubCat1"
-    And the category is linked to the parent
-    When I send a GET request to categories filtered by parent ID
+    When I send a GET request to categories filtered by parent named "Flowers"
     Then the response status code should be 200
     And the response should contain only categories with the specified parent
 
   @API-CAT-GetByBoth-11
   Scenario: Verify GET categories filtered by both name and parentId
     Given I have a valid authentication token for "admin"
-    And a parent category exists with name "ParCat2"
-    And a category exists with name "SubTest"
-    And the category is linked to the parent
-    When I send a GET request with name "Test" and parent ID filter
+    When I send a GET request with name "Roses" and parent named "Flowers"
     Then the response status code should be 200
-    And the response should contain category with name containing "Test" and specified parent
+    And the response should contain category with name containing "Roses" and specified parent
 
   @API-CAT-GetEmpty-12
   Scenario: Verify GET categories with non-existent name returns empty array
@@ -110,10 +103,10 @@ Feature: Category Management API
 
   @API-CAT-GetById-14
   Scenario: Verify GET single category by ID
-    Given a category exists with name "GetById"
-    When I send a GET request for that specific category by ID
+    Given I have a valid authentication token for "admin"
+    When I send a GET request for seeded category "Flowers" by ID
     Then the response status code should be 200
-    And the response body should contain "name" with value "GetById"
+    And the response body should contain "name" with value "Flowers"
 
   @API-CAT-Get404-15
   Scenario: Verify GET category by non-existent ID returns 404

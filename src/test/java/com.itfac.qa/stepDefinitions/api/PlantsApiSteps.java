@@ -1,7 +1,9 @@
 package com.itfac.qa.stepDefinitions.api;
 
+import com.itfac.qa.runners.TestRunner;
 import com.itfac.qa.utils.AuthenticationHelper;
 import com.itfac.qa.utils.ConfigurationManager;
+import com.itfac.qa.utils.TestDataSeeder;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,11 +28,107 @@ public class PlantsApiSteps {
 
     private static String lastPostEndpoint;
     private static String lastPostPayload;
+    private static Long firstSeededPlantId;
+    private static Long lastSeededPlantId;
+
+    // Helper method to get first seeded plant ID
+    private Long getFirstSeededPlantId() {
+        if (firstSeededPlantId == null) {
+            TestDataSeeder seeder = TestRunner.getDataSeeder();
+            if (seeder != null) {
+                List<Long> plantIds = seeder.getSeededIds("plants");
+                if (!plantIds.isEmpty()) {
+                    firstSeededPlantId = plantIds.get(0);
+                }
+            }
+        }
+        return firstSeededPlantId;
+    }
+
+    // Helper method to get last seeded plant ID
+    private Long getLastSeededPlantId() {
+        if (lastSeededPlantId == null) {
+            TestDataSeeder seeder = TestRunner.getDataSeeder();
+            if (seeder != null) {
+                List<Long> plantIds = seeder.getSeededIds("plants");
+                if (!plantIds.isEmpty()) {
+                    lastSeededPlantId = plantIds.get(plantIds.size() - 1);
+                }
+            }
+        }
+        return lastSeededPlantId;
+    }
+
+    // Helper method to get first seeded category ID
+    private Long getFirstSeededCategoryId() {
+        TestDataSeeder seeder = TestRunner.getDataSeeder();
+        if (seeder != null) {
+            List<Long> categoryIds = seeder.getSeededIds("categories");
+            if (!categoryIds.isEmpty()) {
+                return categoryIds.get(0);
+            }
+        }
+        return null;
+    }
 
     @Given("I authenticate with username {string} and password {string} and store the token")
     public void authenticateAndStoreToken(String username, String password) {
         authToken = authHelper.authenticate(username, password);
         System.out.println("Authentication successful. Token obtained: " + authToken.substring(0, 20) + "...");
+    }
+
+    @When("I send a GET request to get the first seeded plant by ID")
+    public void sendGetRequestForFirstSeededPlant() {
+        Long plantId = getFirstSeededPlantId();
+        Assert.assertNotNull("No seeded plants found!", plantId);
+        sendGetRequestWithToken("/api/plants/" + plantId);
+    }
+
+    @When("I send a PUT request to update the first seeded plant with name {string} price {int} and quantity {int}")
+    public void sendPutRequestToUpdateFirstSeededPlant(String name, int price, int quantity) {
+        Long plantId = getFirstSeededPlantId();
+        Assert.assertNotNull("No seeded plants found!", plantId);
+        
+        // Get category info from existing plant
+        Map<String, Object> existing = fetchExistingCategoryFromPlants();
+        int categoryId = (int) existing.get("categoryId");
+        String categoryName = (String) existing.get("categoryName");
+        
+        String payload = String.format("{"
+                + "\"id\": %d,"
+                + "\"name\": \"%s\","
+                + "\"price\": %d,"
+                + "\"quantity\": %d,"
+                + "\"category\": {"
+                + "\"id\": %d,"
+                + "\"name\": \"%s\","
+                + "\"parent\": null,"
+                + "\"subCategories\": []"
+                + "}"
+                + "}", plantId, name, price, quantity, categoryId, categoryName);
+        
+        sendPutRequestWithTokenAndPayload("/api/plants/" + plantId, payload);
+    }
+
+    @When("I send a DELETE request to delete the last seeded plant by ID")
+    public void sendDeleteRequestForLastSeededPlant() {
+        Long plantId = getLastSeededPlantId();
+        Assert.assertNotNull("No seeded plants found!", plantId);
+        sendDeleteRequestWithToken("/api/plants/" + plantId);
+    }
+
+    @When("I send a DELETE request to delete first seeded plant without authentication")
+    public void sendDeleteRequestForFirstSeededPlantWithoutAuth() {
+        Long plantId = getFirstSeededPlantId();
+        Assert.assertNotNull("No seeded plants found!", plantId);
+        sendDeleteRequestWithoutAuth("/api/plants/" + plantId);
+    }
+
+    @When("I send a GET request to get plants by first seeded category without authentication")
+    public void sendGetRequestByFirstSeededCategoryWithoutAuth() {
+        Long categoryId = getFirstSeededCategoryId();
+        Assert.assertNotNull("No seeded categories found!", categoryId);
+        sendGetRequestWithoutAuth("/api/plants/category/" + categoryId);
     }
 
     @When("I send a GET request to {string} with the stored token")
