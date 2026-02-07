@@ -1,10 +1,11 @@
-@API
+@API @Auth
 Feature: Authentication API Module
   I want to verify the backend security and token generation
 
   Background:
     Given the backend API is running at "http://localhost:8080"
 
+  @API-AUTH-Login-01
   Scenario Outline: Verify Login Success for Valid Roles
     When I send a POST request to "/api/auth/login" with username "<username>" and password "<password>"
     Then the response status code should be 200
@@ -15,6 +16,7 @@ Feature: Authentication API Module
       | admin    | admin123  | Admin |
       | testuser | test123   | User  |
 
+  @API-AUTH-Login-02
   Scenario Outline: Verify Login Failures (Invalid Credentials & Validation)
     When I send a POST request to "/api/auth/login" with username "<username>" and password "<password>"
     Then the response status code should be <statusCode>
@@ -27,6 +29,7 @@ Feature: Authentication API Module
       | admin    |               | 400        | BAD REQUEST  | API-AUTH-Login-05 |
       |          |               | 400        | BAD REQUEST  | API-AUTH-Login-06 |
 
+  @API-AUTH-SqlInject-07
   Scenario: Verify SQL Injection Protection
     When I send a POST request to "/api/auth/login" with username "admin" and password "' OR '1'='1"
     Then the response status code should be 401

@@ -1,10 +1,11 @@
-@API
+@API @Plants
 Feature: Plants API Module
   I want to verify the Plants API endpoints with proper authentication
 
   Background:
     Given the backend API is running at "http://localhost:8080"
 
+  @API-PLANT-GetById-01
   Scenario: Verify Get Plant by ID – Success
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "/api/plants/1" with the stored token
@@ -15,6 +16,7 @@ Feature: Plants API Module
     And the response should contain plant details with field "quantity"
     And the response should contain plant details with field "categoryId"
 
+  @API-PLANT-GetByIdFail-02
   Scenario Outline: Verify Get Plant by ID Failures
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "<endpoint>" with the stored token
@@ -25,12 +27,14 @@ Feature: Plants API Module
       | endpoint        | statusCode | Test Case ID             |
       | /api/plants/abc | 500        | API-PLANTS-GetByID-02    |
 
+  @API-PLANT-GetUnauth-03
   Scenario: Verify Get Plant by ID Unauthorized
     When I send a GET request to "/api/plants/1" without authentication
     Then the response status code should be 401
     And the response should contain error field "status" with value 401
     And the response should contain error field "error" with value "UNAUTHORIZED"
 
+  @API-PLANT-PutSuccess-04
   Scenario: Verify Update Plant Success
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a PUT request to "/api/plants/1" with the stored token and payload:
@@ -56,6 +60,7 @@ Feature: Plants API Module
     And the response should contain nested field "category.id"
     And the response should contain nested field "category.name"
 
+  @API-PLANT-PutFail-05
   Scenario Outline: Verify Update Plant Failures
     Given I authenticate with username "<username>" and password "<password>" and store the token
     When I send a PUT request to "<endpoint>" with the stored token and payload:
@@ -71,11 +76,13 @@ Feature: Plants API Module
       | testuser | test123  | /api/plants/1   | 403        | {"id": 1, "name": "Anthurium", "price": 150, "quantity": 25, "category": {"id": 1, "name": "Anthurium", "parent": "string", "subCategories": ["string"]}} | API-PLANTS-Update-03  |
       | admin    | admin123 | /api/plants/1   | 500        | {"id": 1, "name": "Anthurium", "price": 150, "quantity": 25, "category": "invalid_category_string"}                                          | API-PLANTS-Update-04  |
 
+  @API-PLANT-DeleteSuccess-06
   Scenario: Verify Delete Plant by ID Success
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a DELETE request to "/api/plants/1" with the stored token
     Then the response status code should be 204
 
+  @API-PLANT-DeleteFail-07
   Scenario Outline: Verify Delete Plant by ID Failures
     Given I authenticate with username "<username>" and password "<password>" and store the token
     When I send a DELETE request to "<endpoint>" with the stored token
@@ -88,12 +95,14 @@ Feature: Plants API Module
       | testuser | test123  | /api/plants/1   | 403        | API-PLANTS-Delete-04  |
       | admin    | admin123 | /api/plants/999 | 404        | API-PLANTS-Delete-05  |
 
+  @API-PLANT-DeleteUnauth-08
   Scenario: Verify Delete Plant by ID Unauthorized
     When I send a DELETE request to "/api/plants/1" without authentication
     Then the response status code should be 401
     And the response should contain error field "status" with value 401
     And the response should contain error field "error" with value "UNAUTHORIZED"
 
+  @API-PLANT-GetByCat-09
   Scenario: Verify Get Plants by Category Success
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "/api/plants/category/{categoryId}" with the stored token using an existing category id
@@ -105,6 +114,7 @@ Feature: Plants API Module
     And the response should contain nested field "[0].category.id"
     And the response should contain nested field "[0].category.name"
 
+  @API-PLANT-GetCatInvalid-10
   Scenario: Verify Get Plants by Category Invalid Category Format
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "/api/plants/category/abc" with the stored token
@@ -113,12 +123,14 @@ Feature: Plants API Module
     And the response should contain error field "error" with value "INTERNAL_SERVER_ERROR"
     And the response should contain error field "message" containing "Failed to convert value"
 
+  @API-PLANT-GetCatEmpty-11
   Scenario: Verify Get Plants by Category Not Found Returns Empty List
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "/api/plants/category/999" with the stored token
     Then the response status code should be 200
     And the response should be an empty JSON array
 
+  @API-PLANT-GetCatUnauth-12
   Scenario: Verify Get Plants by Category Unauthorized
     When I send a GET request to "/api/plants/category/1" without authentication
     Then the response status code should be 401
@@ -126,6 +138,7 @@ Feature: Plants API Module
     And the response should contain error field "error" with value "UNAUTHORIZED"
     And the response should contain error field "message" with value "Unauthorized - Use Basic Auth or JWT"
 
+  @API-PLANT-CreateForbidden-13
   Scenario: Verify Create Plant Under Category Forbidden
     Given I authenticate with username "testuser" and password "test123" and store the token
     When I create a new plant under an existing category
@@ -133,6 +146,7 @@ Feature: Plants API Module
     And the response should contain error field "status" with value 403
     And the response should contain error field "error" with value "Forbidden"
 
+  @API-PLANT-CreateSuccess-14
   Scenario: Verify Create Plant Under Category Success
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I create a new plant under an existing category
@@ -144,6 +158,7 @@ Feature: Plants API Module
     And the response should contain nested field "category.id"
     And the response should contain nested field "category.name"
 
+  @API-PLANT-CreateDup-15
   Scenario: Verify Create Plant Duplicate Request
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I create a new plant under an existing category
@@ -153,6 +168,7 @@ Feature: Plants API Module
     And the response should contain error field "error" containing "DUPLICATE"
     And the response should contain error field "message" containing "already exists"
 
+  @API-PLANT-CreateNotFound-16
   Scenario: Verify Create Plant Category Not Found
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a POST request to "/api/plants/category/999" with the stored token and payload:
@@ -174,6 +190,7 @@ Feature: Plants API Module
     And the response should contain error field "error" containing "NOT_FOUND"
     And the response should contain error field "message" with value "Category not found"
 
+  @API-PLANT-GetAll-17
   Scenario: Verify Get All Plants Success
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "/api/plants" with the stored token
@@ -185,6 +202,7 @@ Feature: Plants API Module
     And the response should contain nested field "[0].category.id"
     And the response should contain nested field "[0].category.name"
 
+  @API-PLANT-GetAllParam-18
   Scenario: Verify Get All Plants With Unknown Query Param
     Given I authenticate with username "admin" and password "admin123" and store the token
     When I send a GET request to "/api/plants?invalidParam=true" with the stored token

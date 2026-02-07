@@ -1,7 +1,8 @@
-@UI
+@UI @Sales
 Feature: Sales Management UI Automation
 
   # Covers: FrontendUI-SALES-Nav-01, Vis-01, Vis-02
+  @UI-SALES-RoleView-01
   Scenario Outline: Verify UI elements based on role
     Given I navigate to the login page
     And I login as "<role>" via UI
@@ -16,6 +17,7 @@ Feature: Sales Management UI Automation
       | User  | hidden     |
 
   # Covers: FrontendUI-SALES-Flow-03
+  @UI-SALES-Flow-02
   Scenario: Admin completes a successful sale via UI
     Given I navigate to the login page
     And I login as "Admin" via UI
@@ -27,6 +29,7 @@ Feature: Sales Management UI Automation
     And the new sale should appear at the top of the list
 
   # Covers: FrontendUI-SALES-Form-01
+  @UI-SALES-FormEmpty-03
   Scenario: Submit Empty Form Validation
     Given I navigate to the login page
     And I login as "Admin" via UI
@@ -35,6 +38,7 @@ Feature: Sales Management UI Automation
     Then I should see a validation error "Plant is required" on the page
 
   # Covers: FrontendUI-SALES-Form-02
+  @UI-SALES-FormInvalid-04
   Scenario: Submit Invalid Quantity Validation
     Given I navigate to the login page
     And I login as "Admin" via UI
@@ -45,6 +49,7 @@ Feature: Sales Management UI Automation
     Then I should see a validation error "Quantity must be greater than 0" on the page
 
   # Covers: FrontendUI-SALES-Del-01
+  @UI-SALES-Delete-05
   Scenario: Delete Confirmation
     Given I navigate to the login page
     And I login as "Admin" via UI
